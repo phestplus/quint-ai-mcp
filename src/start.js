@@ -1,4 +1,4 @@
-// q4_start: the context engine. Takes whatever the user typed ("i sell sneakers in
+// quint_start: the context engine. Takes whatever the user typed ("i sell sneakers in
 // lagos, need bf content for ig and whatsapp, 30 percent off") and returns what we
 // understood, what we assumed, the few questions that truly block progress, the
 // events that matter for this audience, what to post today, and prefilled next calls.

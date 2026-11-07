@@ -4,7 +4,7 @@
 
 Works with Claude (Code and Desktop), ChatGPT and Codex, or any MCP client.
 
-Docs and examples: https://phestplus.github.io/quint-ai-mcp/ (mirror: https://q4.erasstack.com/docs/)
+Docs and examples: https://phestplus.github.io/quint-ai-mcp/ (mirror: https://quintai.erasstack.com/docs/)
 
 ## What it does
 
@@ -35,7 +35,7 @@ Docs and examples: https://phestplus.github.io/quint-ai-mcp/ (mirror: https://q4
 | `find_images` | Free, commercially usable photos with licence and attribution; filters logos. |
 | `landing_page` | Cinematic sales page from your product, photos, video or 3D model. |
 | `export_plan` | CSV (Sheets, Notion, Airtable), ICS (Google, Apple, Outlook calendar) or Markdown. |
-| `publish_page` | Puts the page online at `q4-<brand>.erasstack.com` and returns the link to share. |
+| `publish_page` | Puts the page online at `quintai-<brand>.erasstack.com` and returns the link to share. |
 | `page_stats` | Views and WhatsApp order clicks per product. |
 | `connect_domain` | Pro: serve pages on your own domain with automatic HTTPS. |
 | `cloud_account` | Connect in one step (browser approval), plan status, dashboard link, and Flutterwave upgrade links. |
@@ -93,16 +93,16 @@ Health check: `GET /health`. In HTTP mode the server never writes files.
 
 ## Publish and measure (Quint AI Cloud)
 
-`publish_page` puts a page online in seconds and returns a link like `https://q4-korakicks.erasstack.com/black-friday`. `page_stats` shows views and WhatsApp order clicks per product.
+`publish_page` puts a page online in seconds and returns a link like `https://quintai-korakicks.erasstack.com/black-friday`. `page_stats` shows views and WhatsApp order clicks per product.
 
 **Connect in one step.** Say "connect my Quint AI account". Your assistant shows a link and a code; open the link, check the code matches, confirm your email and press Approve. The key is saved on your computer (`~/.quint-ai/credentials.json`), so there is nothing to paste and no restart. New emails get a free account.
 
-Your dashboard at https://q4.erasstack.com/dashboard shows views, WhatsApp taps per product, visitor countries and your plan. Sign in with your email; no password.
+Your dashboard at https://quintai.erasstack.com/dashboard shows views, WhatsApp taps per product, visitor countries and your plan. Sign in with your email; no password.
 
 Prefer setting a key yourself (CI, hosted connectors)? Create one in the dashboard and add it to your MCP config:
 
 ```json
-"env": { "QUINT_AI_API_KEY": "q4_..." }
+"env": { "QUINT_AI_API_KEY": "quint_..." }
 ```
 
 | Plan | Price | Includes |
@@ -111,7 +111,7 @@ Prefer setting a key yourself (CI, hosted connectors)? Create one in the dashboa
 | Pro | ₦9,900 a month in Nigeria, $9 elsewhere | Your own domain, no badge, 100 pages, 12-month analytics |
 | Business | ₦60,000 a month in Nigeria, $39 elsewhere | 10 brands, 10 custom domains |
 
-Payments are handled by Flutterwave's secure checkout. Pricing: https://q4.erasstack.com
+Payments are handled by Flutterwave's secure checkout. Pricing: https://quintai.erasstack.com
 
 ## Better photos (optional, free)
 

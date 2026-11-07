@@ -14,7 +14,7 @@ const bundle = new URL('../dist/server.mjs', import.meta.url);
 const skip = !existsSync(bundle) && 'run npm run build first';
 
 function isolated() {
-  const dir = mkdtempSync(join(tmpdir(), 'q4-e2e-'));
+  const dir = mkdtempSync(join(tmpdir(), 'quint-e2e-'));
   const file = join(dir, 'server.mjs');
   copyFileSync(bundle, file);
   return { dir, file };

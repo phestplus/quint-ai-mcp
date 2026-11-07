@@ -21,7 +21,7 @@ const M = {
   droplets: S('m-corner', '0 0 600 600', `<path d="M380 120c50 80 90 130 90 180a90 90 0 0 1-180 0c0-50 40-100 90-180z" ${fill(0.16)}/><path d="M220 330c-60 0-110 60-110 130 70 0 120-50 120-120z" ${stroke(3)}/>`),
   'ruled-lines': S('m-corner', '0 0 600 600', [0, 1, 2, 3, 4, 5].map((i) => `<path d="M140 ${160 + i * 60} H 540" ${stroke(2, 0.3)}/>`).join('') + `<path d="M180 120 V 520" style="fill:none;stroke:var(--ac);stroke-opacity:.5;stroke-width:3"/>`),
   rings: S('m-corner', '0 0 600 600', [110, 170, 230, 290].map((r) => `<circle cx="300" cy="300" r="${r}" ${stroke(2, 0.38)}/>`).join('')),
-  dots: S('m-corner', '0 0 420 420', `<defs><pattern id="q4dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="4" ${fill(0.4)}/></pattern></defs><rect width="420" height="420" style="fill:url(#q4dots)"/>`),
+  dots: S('m-corner', '0 0 420 420', `<defs><pattern id="quintdots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="4" ${fill(0.4)}/></pattern></defs><rect width="420" height="420" style="fill:url(#quintdots)"/>`),
 };
 
 const FAMILIES = {

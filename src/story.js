@@ -87,7 +87,7 @@ img{max-width:100%;display:block}h1,h2,h3{font-family:var(--d);font-weight:600;l
 .faq{max-width:760px;margin:0 auto;padding:clamp(48px,8vw,96px) 20px}.faq h2{text-align:center;font-size:clamp(30px,4vw,48px);margin-bottom:28px}.faq details{border-bottom:1px solid var(--bd);padding:18px 0}.faq summary{cursor:pointer;font-weight:600;font-size:18px;list-style:none}.faq summary::after{content:'+';float:right;color:var(--ac)}.faq details[open] summary::after{content:'−'}.faq p{color:var(--mu)}
 .ft-mark{padding:clamp(60px,10vw,140px) 16px 0;text-align:center;font:600 clamp(72px,17vw,260px)/.85 var(--d);letter-spacing:-.04em;color:color-mix(in srgb,var(--tx) 90%,var(--bg));overflow:hidden;white-space:nowrap}.ft-mark svg{height:clamp(72px,17vw,260px);width:auto;display:inline-block}
 .ft{padding:36px 20px 120px;text-align:center;color:var(--mu);font-size:13px}
-.float{animation:q4f 7s ease-in-out infinite}.float.d{animation-delay:-3.5s}@keyframes q4f{50%{transform:translateY(-10px)}}
+.float{animation:quintf 7s ease-in-out infinite}.float.d{animation-delay:-3.5s}@keyframes quintf{50%{transform:translateY(-10px)}}
 @media(prefers-reduced-motion:reduce){.float{animation:none}.s-thread path{stroke-dashoffset:0}.s-line i{transform:none}}
 </style></head>
 <body${lightText ? ' class="m-light"' : ''}>

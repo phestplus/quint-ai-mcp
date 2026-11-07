@@ -355,9 +355,9 @@ Includes an honest countdown, sticky mobile CTA, SEO/Open Graph tags, Product/Of
   // ---- Quint AI Cloud: publish, measure, own domain, billing ----
   server.registerTool('publish_page', {
     title: 'Publish a page online',
-    description: 'Put a sales page online and get a shareable link, e.g. https://q4-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user\'s own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).',
+    description: 'Put a sales page online and get a shareable link, e.g. https://quintai-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user\'s own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).',
     inputSchema: {
-      brand: z.string().min(1).describe('Brand name; becomes the address q4-<brand>.erasstack.com'),
+      brand: z.string().min(1).describe('Brand name; becomes the address quintai-<brand>.erasstack.com'),
       path: z.string().optional().describe('Page path, e.g. "black-friday"; empty for the home page'),
       role: z.enum(['home', 'campaign', 'product', 'legal', 'review']).optional().describe('home (site root, links live campaigns automatically), campaign (ends cleanly after endsAt), product, legal, or review (private, not indexed, does not use a page slot)'),
       endsAt: z.string().optional().describe('For campaigns: when the offer ends (ISO with time zone). After it, the page says the offer has ended, then redirects home.'),
@@ -562,7 +562,7 @@ Includes an honest countdown, sticky mobile CTA, SEO/Open Graph tags, Product/Of
         return { ...p, image: hosted ? undefined : `data:${type};base64,${buf.toString('base64')}`, representative: false };
       })) };
     }
-    const kit = buildKit({ ...a, watermark: !paid, proxy: hosted ? (url, i) => (/^data:/.test(url) ? url : `/__q4/img/__KIT__/${i}`) : undefined });
+    const kit = buildKit({ ...a, watermark: !paid, proxy: hosted ? (url, i) => (/^data:/.test(url) ? url : `/__quint/img/__KIT__/${i}`) : undefined });
     const { askUser, assumed } = questionsFor('kit', a);
     if (a.discountPercent || /\d\s*%|off/i.test(a.offer ?? '') || a.originalPrice) notes.push('Before you share: make sure your checkout or app actually charges the advertised sale price. Advertising a price you do not charge is a consumer-law risk (for example under Nigeria\'s FCCPA).');
     const summary = { posts: kit.posts, notes, ...(askUser.length ? { askUser, howToAsk: ASK_RULE } : {}), assumed, checks: runChecks('content_kit', { kind: 'kit', html: kit.html, args: { ...a, offerType: a.offerType }, posts: kit.posts, contentOnly: kit.contentOnly }) };
@@ -731,7 +731,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
       if (allowFileWrites && /image\/(png|jpeg|webp)/.test(type)) {
         // Free local background removal so the illustration sits frameless on any page.
         try {
-          const dir = resolve(tmpdir(), `q4-ill-${Date.now()}`);
+          const dir = resolve(tmpdir(), `quint-ill-${Date.now()}`);
           await mkdir(dir, { recursive: true });
           const src = resolve(dir, `in.${type.split('/')[1].replace('jpeg', 'jpg')}`);
           await writeFile(src, buf);

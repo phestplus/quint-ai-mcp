@@ -82,7 +82,7 @@ test('studio_photo enhances a local photo (background removal when rembg is pres
   const { tmpdir } = await import('node:os');
   const { join } = await import('node:path');
   const { execFileSync } = await import('node:child_process');
-  const dir = mkdtempSync(join(tmpdir(), 'q4studio-'));
+  const dir = mkdtempSync(join(tmpdir(), 'quintstudio-'));
   const src = join(dir, 'shoe.png');
   try {
     execFileSync(process.platform === 'win32' ? 'python' : 'python3', ['-c', `from PIL import Image, ImageDraw\nim=Image.new('RGB',(800,600),(180,170,150))\nd=ImageDraw.Draw(im)\nd.ellipse((200,250,600,420),fill=(240,240,240))\nim.save(r'${src}')`]);

@@ -40922,7 +40922,7 @@ function pickFormat(p, assetType) {
 import { mkdirSync, readFileSync, writeFileSync, chmodSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-var base = () => (process.env.QUINT_AI_API_URL || "https://q4.erasstack.com").replace(/\/+$/, "");
+var base = () => (process.env.QUINT_AI_API_URL || "https://quint.erasstack.com").replace(/\/+$/, "");
 var credFile = () => join(process.env.QUINT_AI_HOME || join(homedir(), ".quint-ai"), "credentials.json");
 var NO_KEY = 'Not connected to Quint AI Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';
 function readSaved() {
@@ -42545,7 +42545,7 @@ var M = {
   droplets: S("m-corner", "0 0 600 600", `<path d="M380 120c50 80 90 130 90 180a90 90 0 0 1-180 0c0-50 40-100 90-180z" ${fill(0.16)}/><path d="M220 330c-60 0-110 60-110 130 70 0 120-50 120-120z" ${stroke(3)}/>`),
   "ruled-lines": S("m-corner", "0 0 600 600", [0, 1, 2, 3, 4, 5].map((i) => `<path d="M140 ${160 + i * 60} H 540" ${stroke(2, 0.3)}/>`).join("") + `<path d="M180 120 V 520" style="fill:none;stroke:var(--ac);stroke-opacity:.5;stroke-width:3"/>`),
   rings: S("m-corner", "0 0 600 600", [110, 170, 230, 290].map((r) => `<circle cx="300" cy="300" r="${r}" ${stroke(2, 0.38)}/>`).join("")),
-  dots: S("m-corner", "0 0 420 420", `<defs><pattern id="q4dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="4" ${fill(0.4)}/></pattern></defs><rect width="420" height="420" style="fill:url(#q4dots)"/>`)
+  dots: S("m-corner", "0 0 420 420", `<defs><pattern id="quintdots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="4" ${fill(0.4)}/></pattern></defs><rect width="420" height="420" style="fill:url(#quintdots)"/>`)
 };
 var FAMILIES = {
   apps: ["joining-lines", "paired-circles", "arch"],
@@ -42644,7 +42644,7 @@ img{max-width:100%;display:block}h1,h2,h3{font-family:var(--d);font-weight:600;l
 .faq{max-width:760px;margin:0 auto;padding:clamp(48px,8vw,96px) 20px}.faq h2{text-align:center;font-size:clamp(30px,4vw,48px);margin-bottom:28px}.faq details{border-bottom:1px solid var(--bd);padding:18px 0}.faq summary{cursor:pointer;font-weight:600;font-size:18px;list-style:none}.faq summary::after{content:'+';float:right;color:var(--ac)}.faq details[open] summary::after{content:'\u2212'}.faq p{color:var(--mu)}
 .ft-mark{padding:clamp(60px,10vw,140px) 16px 0;text-align:center;font:600 clamp(72px,17vw,260px)/.85 var(--d);letter-spacing:-.04em;color:color-mix(in srgb,var(--tx) 90%,var(--bg));overflow:hidden;white-space:nowrap}.ft-mark svg{height:clamp(72px,17vw,260px);width:auto;display:inline-block}
 .ft{padding:36px 20px 120px;text-align:center;color:var(--mu);font-size:13px}
-.float{animation:q4f 7s ease-in-out infinite}.float.d{animation-delay:-3.5s}@keyframes q4f{50%{transform:translateY(-10px)}}
+.float{animation:quintf 7s ease-in-out infinite}.float.d{animation-delay:-3.5s}@keyframes quintf{50%{transform:translateY(-10px)}}
 @media(prefers-reduced-motion:reduce){.float{animation:none}.s-thread path{stroke-dashoffset:0}.s-line i{transform:none}}
 </style></head>
 <body${lightText ? ' class="m-light"' : ""}>
@@ -43454,7 +43454,7 @@ function buildKit(o) {
   const priceRow = hasOffer && o.price ? `<p class="g-pr"><b>${esc3(o.price)}</b>${o.originalPrice ? `<s>${esc3(o.originalPrice)}</s>` : ""}</p>` : "";
   const offerHead = (fallback, own3) => own3 ? `<h2 class="g-h">${esc3(own3)}</h2>` : typeLed && off ? "" : `<h2 class="g-h">${esc3(offTxt ? cap3(offTxt) : fallback)}</h2>`;
   const head = (h) => `${deco}<div class="g-top"><span class="g-brand">${o.logoUrl ? `<img src="${esc3(img(o.logoUrl))}" alt="">` : wordmarkHtml(o)}</span>${event ? `<span class="g-ev">${esc3(event)}</span>` : ""}</div>${h}`;
-  const wm = '<div class="q4wm">Made with Quint AI</div>';
+  const wm = '<div class="quintwm">Made with Quint AI</div>';
   const verbs = VERBS[offerType] ?? VERBS.physical;
   const deco = motifFor(nicheId, o.brand, o.illustration?.motifs ?? o.motifs).svg;
   const ICON = {
@@ -43684,9 +43684,9 @@ ${MOTIF_CSS}
 .g.bleed::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 24%,rgba(0,0,0,0) 46%,rgba(0,0,0,.82) 100%)}
 .g.bleed .g-top,.g.bleed .g-bot{color:#fff}.g.bleed .g-pr s{color:rgba(255,255,255,.72)}.g.bleed .g-cta{color:rgba(255,255,255,.88)}
 .g.bleed .g-chip{background:rgba(255,255,255,.16);color:#fff}.g.bleed .g-feats li{border-color:rgba(255,255,255,.4);color:#fff}.g.bleed .deco{display:none}
-.g.bleed .rep-l{top:150px;left:72px;bottom:auto;z-index:2}.g.bleed .q4wm{color:#fff;z-index:3}
-.q4wm{display:none;position:absolute;right:28px;bottom:24px;font:600 22px/1 var(--b);color:var(--tx);opacity:.6}
-${o.watermark ? ".q4wm{display:block}" : ""}
+.g.bleed .rep-l{top:150px;left:72px;bottom:auto;z-index:2}.g.bleed .quintwm{color:#fff;z-index:3}
+.quintwm{display:none;position:absolute;right:28px;bottom:24px;font:600 22px/1 var(--b);color:var(--tx);opacity:.6}
+${o.watermark ? ".quintwm{display:block}" : ""}
 </style></head><body>
 <div class="bar"><div class="bar-in"><span class="mark" aria-hidden="true">${esc3(o.brand.slice(0, 1).toUpperCase())}</span><b class="bar-b">${esc3(o.brand)}</b><span class="bar-c" data-count>${posts.length} posts</span><button type="button" class="bar-dl" data-dlall>${UI.download}<span>Download all</span></button></div></div>
 <header class="top"><p class="eyebrow"><i></i>Content kit${THEMES[o.theme] && o.theme !== "default" ? ` \xB7 ${esc3(t.eyebrow)}` : ""}</p><h1>${posts.length} posts, ready to share</h1><p>Captions are written for each app. Edit anything, then share straight from your phone.${link ? ` Every post links to <a href="${esc3(link)}">${esc3(link.replace(/^https?:\/\//, ""))}</a>.` : ""}</p>
@@ -43738,7 +43738,7 @@ function files(card){return Promise.all(Array.prototype.map.call(card.querySelec
 function save(f){var a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
 function refresh(){document.querySelectorAll('.card').forEach(function(c){var st=c.querySelector('[data-st]');var r=c.querySelector('.ph.rep');c.classList.toggle('rep-card',!!r);if(st){var lab=r?'Ready, uses a representative photo':'Ready';st.title=lab;st.setAttribute('aria-label',lab)}});var cnt=document.querySelector('[data-count]');if(cnt)cnt.textContent=document.querySelectorAll('.card').length+' posts ready'}
 document.addEventListener('click',function(e){if(!e.target.closest('[data-dlall]'))return;var cards=[].slice.call(document.querySelectorAll('.card'));var b=e.target.closest('[data-dlall]');b.lastChild.textContent='Preparing...';cards.reduce(function(pr,c){return pr.then(function(){return files(c).then(function(fs){fs.forEach(save)})})},Promise.resolve()).then(function(){b.lastChild.textContent='Download all'},function(){b.lastChild.textContent='Try again'})});
-var KIT=window.Q4_KIT||null;
+var KIT=window.QUINT_KIT||null;
 function setPhoto(key,url,scope){(/^m/.test(key)?scope:document).querySelectorAll('.ph[data-p="'+key+'"]').forEach(function(ph){ph.classList.remove('need');ph.classList.remove('rep');var tag=ph.querySelector('.rep-l');if(tag)tag.remove();var im=ph.querySelector('img')||document.createElement('img');im.removeAttribute('crossorigin');im.src=url;im.alt='';if(!im.parentNode)ph.insertBefore(im,ph.firstChild)});refresh()}
 document.querySelectorAll('.card').forEach(function(card){
   card.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){card.querySelectorAll('[data-tab]').forEach(function(x){x.setAttribute('aria-selected',String(x===b))});card.querySelectorAll('[data-cap]').forEach(function(t){t.hidden=t.getAttribute('data-cap')!==b.getAttribute('data-tab')});links()})});
@@ -43751,7 +43751,7 @@ document.querySelectorAll('.card').forEach(function(card){
 if(KIT&&KIT.photos)Object.keys(KIT.photos).forEach(function(k){setPhoto(k,KIT.photos[k],document)});
 document.querySelectorAll('.card').forEach(function(card){var f=card.querySelector('[data-flag]'),box=card.querySelector('[data-fb]');if(!f)return;if(!KIT){f.hidden=true;return}
   f.addEventListener('click',function(){box.hidden=!box.hidden});
-  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__q4/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quint AI team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
+  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__quint/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quint AI team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
 document.querySelectorAll('.card').forEach(function(card){var pl=card.querySelector('[data-play]'),vd=card.querySelector('[data-video]');if(pl)pl.addEventListener('click',function(){preview(card)});if(vd)vd.addEventListener('click',function(){video(card)})});
 refresh();
 })();
@@ -44333,9 +44333,9 @@ ${html}` }] };
   }, wrap(async (a) => json3(await findImages(a.query, a))));
   server.registerTool("publish_page", {
     title: "Publish a page online",
-    description: `Put a sales page online and get a shareable link, e.g. https://q4-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user's own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).`,
+    description: `Put a sales page online and get a shareable link, e.g. https://quint-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user's own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).`,
     inputSchema: {
-      brand: external_exports.string().min(1).describe("Brand name; becomes the address q4-<brand>.erasstack.com"),
+      brand: external_exports.string().min(1).describe("Brand name; becomes the address quint-<brand>.erasstack.com"),
       path: external_exports.string().optional().describe('Page path, e.g. "black-friday"; empty for the home page'),
       role: external_exports.enum(["home", "campaign", "product", "legal", "review"]).optional().describe("home (site root, links live campaigns automatically), campaign (ends cleanly after endsAt), product, legal, or review (private, not indexed, does not use a page slot)"),
       endsAt: external_exports.string().optional().describe("For campaigns: when the offer ends (ISO with time zone). After it, the page says the offer has ended, then redirects home."),
@@ -44544,7 +44544,7 @@ ${html}` }] };
         return { ...p, image: hosted ? void 0 : `data:${type};base64,${buf.toString("base64")}`, representative: false };
       })) };
     }
-    const kit = buildKit({ ...a, watermark: !paid, proxy: hosted ? (url2, i) => /^data:/.test(url2) ? url2 : `/__q4/img/__KIT__/${i}` : void 0 });
+    const kit = buildKit({ ...a, watermark: !paid, proxy: hosted ? (url2, i) => /^data:/.test(url2) ? url2 : `/__quint/img/__KIT__/${i}` : void 0 });
     const { askUser, assumed } = questionsFor("kit", a);
     if (a.discountPercent || /\d\s*%|off/i.test(a.offer ?? "") || a.originalPrice) notes.push("Before you share: make sure your checkout or app actually charges the advertised sale price. Advertising a price you do not charge is a consumer-law risk (for example under Nigeria's FCCPA).");
     const summary = { posts: kit.posts, notes, ...askUser.length ? { askUser, howToAsk: ASK_RULE } : {}, assumed, checks: runChecks("content_kit", { kind: "kit", html: kit.html, args: { ...a, offerType: a.offerType }, posts: kit.posts, contentOnly: kit.contentOnly }) };
@@ -44711,7 +44711,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
       let upBuf = buf, upType = type;
       if (allowFileWrites && /image\/(png|jpeg|webp)/.test(type)) {
         try {
-          const dir = resolve(tmpdir(), `q4-ill-${Date.now()}`);
+          const dir = resolve(tmpdir(), `quint-ill-${Date.now()}`);
           await mkdir(dir, { recursive: true });
           const src = resolve(dir, `in.${type.split("/")[1].replace("jpeg", "jpg")}`);
           await writeFile(src, buf);
