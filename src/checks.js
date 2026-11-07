@@ -1,4 +1,4 @@
-// render_check v1: Quarter4 checks its own output before anyone sees it. Every rule here comes from a
+// render_check v1: Quint AI checks its own output before anyone sees it. Every rule here comes from a
 // real complaint (see the field log): leaked markup, retail copy for non-retail offers, raw inputs as
 // headings, prices without an offer, words the brand avoids, unrequested locations, off-brand palettes.
 // Issues are returned with the tool result and, when connected, filed automatically for the team.

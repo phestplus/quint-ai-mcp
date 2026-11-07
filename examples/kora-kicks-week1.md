@@ -1,6 +1,6 @@
 # Content test: Kora Kicks, week 1 (Nov 2 to Nov 6, 2026)
 
-Fictional brand used to test Quarter4. Sneakers and streetwear, audience US + Nigeria, offer: 30% off all sneakers on 11.11, Black Friday campaign after.
+Fictional brand used to test Quint AI. Sneakers and streetwear, audience US + Nigeria, offer: 30% off all sneakers on 11.11, Black Friday campaign after.
 Inputs given: brand, niche, platforms, regions, offer. Everything below came from `q4_calendar`, `q4_content_plan`, `asset_brief` and the model writing in one pass.
 
 ---

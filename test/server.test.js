@@ -17,7 +17,7 @@ test('lists all tools and prompts', async () => {
   const tools = (await client.listTools()).tools.map((t) => t.name).sort();
   assert.deepEqual(tools, ['asset_brief', 'asset_upload', 'brand_extract', 'brand_profile', 'campaign_go', 'cloud_account', 'connect_domain', 'content_kit', 'content_plan', 'event_calendar', 'export_plan', 'find_images', 'illustrate', 'kit_edit', 'landing_page', 'page_stats', 'platform_specs', 'publish_page', 'report_issue', 'start_campaign', 'studio_photo', 'unpublish', 'video', 'whats_on']);
   const prompts = (await client.listPrompts()).prompts.map((p) => p.name).sort();
-  assert.deepEqual(prompts, ['q4-campaign', 'q4-video-script']);
+  assert.deepEqual(prompts, ['quint-campaign', 'quint-video-script']);
   await close();
 });
 

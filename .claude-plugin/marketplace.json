@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "quarter4",
+      "name": "quint-ai",
       "source": "./",
       "description": "Year-round marketing engine for creators and sellers: holidays, shopping days and live trends for 100+ countries, niche-aware content plans, posts, image and video briefs, free licensed photos, and cinematic product sales pages.",
       "category": "productivity"

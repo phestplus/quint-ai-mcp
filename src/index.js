@@ -43,7 +43,7 @@ if (flag('--version')) {
       if (!res.headersSent) res.writeHead(500, { 'content-type': 'application/json' }).end(JSON.stringify({ jsonrpc: '2.0', error: { code: -32603, message: 'Internal error' }, id: null }));
       console.error(e);
     }
-  }).listen(port, host, () => console.error(`quarter4 MCP ${VERSION} listening on http://${host}:${port}/mcp`));
+  }).listen(port, host, () => console.error(`quint-ai MCP ${VERSION} listening on http://${host}:${port}/mcp`));
 } else {
   const server = createServer({ allowFileWrites: true });
   await server.connect(new StdioServerTransport());

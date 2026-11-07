@@ -1,10 +1,10 @@
 {
-  "name": "quarter4-mcp",
-  "version": "0.7.0",
+  "name": "quint-ai-mcp",
+  "version": "0.8.0",
   "description": "Year-round marketing engine MCP server: holidays and live trends for 100+ countries, niche-aware content plans, briefs, free licensed photos and cinematic sales pages. Works with Claude, ChatGPT and Codex.",
   "type": "module",
   "bin": {
-    "quarter4-mcp": "dist/server.mjs"
+    "quint-ai-mcp": "dist/server.mjs"
   },
   "main": "dist/server.mjs",
   "files": [
@@ -41,10 +41,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phestplus/quarter4-mcp.git"
+    "url": "git+https://github.com/phestplus/quint-ai-mcp.git"
   },
-  "homepage": "https://phestplus.github.io/quarter4-mcp/",
-  "mcpName": "io.github.phestplus/quarter4-mcp",
+  "homepage": "https://phestplus.github.io/quint-ai-mcp/",
+  "mcpName": "io.github.phestplus/quint-ai-mcp",
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
     "zod": "^4.6.7",

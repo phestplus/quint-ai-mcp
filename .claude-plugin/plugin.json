@@ -1,13 +1,13 @@
 {
-  "name": "quarter4",
-  "version": "0.7.0",
+  "name": "quint-ai",
+  "version": "0.8.0",
   "description": "Year-round marketing engine for creators and sellers: holidays, shopping days and live trends for 100+ countries, niche-aware content plans, posts, image and video briefs, free licensed photos, and cinematic product sales pages.",
   "author": {
     "name": "phestplus",
     "url": "https://github.com/phestplus"
   },
-  "homepage": "https://phestplus.github.io/quarter4-mcp/",
-  "repository": "https://github.com/phestplus/quarter4-mcp",
+  "homepage": "https://phestplus.github.io/quint-ai-mcp/",
+  "repository": "https://github.com/phestplus/quint-ai-mcp",
   "license": "MIT",
   "keywords": [
     "content-creator",

@@ -89,7 +89,7 @@ export function buildKit(o) {
   // itself is the focal point, so the headline is not repeated: price and end date support it.
   const offerHead = (fallback, own) => (own ? `<h2 class="g-h">${esc(own)}</h2>` : typeLed && off ? '' : `<h2 class="g-h">${esc(offTxt ? cap(offTxt) : fallback)}</h2>`);
   const head = (h) => `${deco}<div class="g-top"><span class="g-brand">${o.logoUrl ? `<img src="${esc(img(o.logoUrl))}" alt="">` : wordmarkHtml(o)}</span>${event ? `<span class="g-ev">${esc(event)}</span>` : ''}</div>${h}`;
-  const wm = '<div class="q4wm">Made with Quarter4</div>';
+  const wm = '<div class="q4wm">Made with Quint AI</div>';
   const verbs = VERBS[offerType] ?? VERBS.physical;
   // Motif by category (relationships: joining lines; food: steam; fitness: motion lines...), stable per brand.
   const deco = motifFor(nicheId, o.brand, o.illustration?.motifs ?? o.motifs).svg;
@@ -386,7 +386,7 @@ document.querySelectorAll('.card').forEach(function(card){
 if(KIT&&KIT.photos)Object.keys(KIT.photos).forEach(function(k){setPhoto(k,KIT.photos[k],document)});
 document.querySelectorAll('.card').forEach(function(card){var f=card.querySelector('[data-flag]'),box=card.querySelector('[data-fb]');if(!f)return;if(!KIT){f.hidden=true;return}
   f.addEventListener('click',function(){box.hidden=!box.hidden});
-  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__q4/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quarter4 team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
+  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__q4/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quint AI team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
 document.querySelectorAll('.card').forEach(function(card){var pl=card.querySelector('[data-play]'),vd=card.querySelector('[data-video]');if(pl)pl.addEventListener('click',function(){preview(card)});if(vd)vd.addEventListener('click',function(){video(card)})});
 refresh();
 })();

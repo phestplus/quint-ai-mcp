@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "quarter4": {
+    "quint-ai": {
       "command": "node",
       "args": ["${CLAUDE_PLUGIN_ROOT}/dist/server.mjs"]
     }

@@ -1,7 +1,7 @@
 # Publishes to npm with Trusted Publishing (OIDC, no tokens) when a version tag is pushed,
 # e.g. `git tag v0.3.1 && git push origin v0.3.1`. Configure the trusted publisher on
-# npmjs.com: package quarter4-mcp > Settings > Trusted Publisher > GitHub Actions,
-# owner phestplus, repository quarter4-mcp, workflow release.yml.
+# npmjs.com: package quint-ai-mcp > Settings > Trusted Publisher > GitHub Actions,
+# owner phestplus, repository quint-ai-mcp, workflow release.yml.
 name: Release
 on:
   push:
@@ -33,8 +33,8 @@ jobs:
         run: |
           V="$(node -p "require('./package.json').version")"
           # npm view can exit 0 with empty output for a version that does not exist, so compare the text.
-          if [ "$(npm view "quarter4-mcp@$V" version 2>/dev/null)" = "$V" ]; then
-            echo "quarter4-mcp@$V is already on npm, skipping publish"
+          if [ "$(npm view "quint-ai-mcp@$V" version 2>/dev/null)" = "$V" ]; then
+            echo "quint-ai-mcp@$V is already on npm, skipping publish"
             exit 0
           fi
           # A re-run right after a publish can hit npm while the version is still being processed
@@ -46,7 +46,7 @@ jobs:
           cat publish.log
           if [ $rc -ne 0 ]; then
             if grep -qiE "E409|previously staged|cannot publish over" publish.log; then
-              echo "quarter4-mcp@$V was already published and is still being processed by npm."
+              echo "quint-ai-mcp@$V was already published and is still being processed by npm."
             else
               exit $rc
             fi
@@ -58,4 +58,4 @@ jobs:
         run: |
           V="$(node -p "require('./package.json').version")"
           node -e "const s=require('fs').readFileSync('CHANGELOG.md','utf8');const m=s.split(/^## /m).find(x=>x.startsWith('$V'));require('fs').writeFileSync('notes.md',m?m.split('\n').slice(1).join('\n').trim():'See CHANGELOG.md')"
-          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "Quarter4 $GITHUB_REF_NAME" --notes-file notes.md
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "Quint AI $GITHUB_REF_NAME" --notes-file notes.md

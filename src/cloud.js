@@ -1,14 +1,14 @@
-// Client for Quarter4 Cloud (publishing, analytics, domains, billing).
-// Key lookup order: QUARTER4_API_KEY env, then the key saved by "connect" in
-// ~/.quarter4/credentials.json (QUARTER4_HOME overrides the folder). QUARTER4_API_URL overrides the host.
+// Client for Quint AI Cloud (publishing, analytics, domains, billing).
+// Key lookup order: QUINT_AI_API_KEY env, then the key saved by "connect" in
+// ~/.quint-ai/credentials.json (QUINT_AI_HOME overrides the folder). QUINT_AI_API_URL overrides the host.
 import { mkdirSync, readFileSync, writeFileSync, chmodSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
-const base = () => (process.env.QUARTER4_API_URL || 'https://q4.erasstack.com').replace(/\/+$/, '');
-const credFile = () => join(process.env.QUARTER4_HOME || join(homedir(), '.quarter4'), 'credentials.json');
+const base = () => (process.env.QUINT_AI_API_URL || 'https://q4.erasstack.com').replace(/\/+$/, '');
+const credFile = () => join(process.env.QUINT_AI_HOME || join(homedir(), '.quint-ai'), 'credentials.json');
 
-export const NO_KEY = 'Not connected to Quarter4 Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';
+export const NO_KEY = 'Not connected to Quint AI Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';
 
 function readSaved() {
   try {
@@ -36,19 +36,19 @@ export function createCloud({ persist = false, client: initialClient = 'AI app' 
   let lastResult = null;
 
   const keyOf = () => key();
-  const key = () => process.env.QUARTER4_API_KEY || memKey || (persist ? readSaved()?.apiKey : null) || null;
+  const key = () => process.env.QUINT_AI_API_KEY || memKey || (persist ? readSaved()?.apiKey : null) || null;
 
   async function api(path, { method = 'GET', body, auth = true } = {}) {
     const k = key();
     if (auth && !k) throw new Error(NO_KEY);
     const res = await fetch(`${base()}${path}`, {
       method,
-      headers: { 'content-type': 'application/json', 'user-agent': 'quarter4-mcp', ...(auth ? { authorization: `Bearer ${k}` } : {}) },
+      headers: { 'content-type': 'application/json', 'user-agent': 'quint-ai-mcp', ...(auth ? { authorization: `Bearer ${k}` } : {}) },
       body: body ? JSON.stringify(body) : undefined,
       signal: AbortSignal.timeout(20000),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok && res.status !== 202 && res.status !== 410) throw new Error(data.error ?? `Quarter4 Cloud returned ${res.status}`);
+    if (!res.ok && res.status !== 202 && res.status !== 410) throw new Error(data.error ?? `Quint AI Cloud returned ${res.status}`);
     return { ...data, httpStatus: res.status };
   }
   const strip = ({ httpStatus, ...d }) => d;
@@ -57,7 +57,7 @@ export function createCloud({ persist = false, client: initialClient = 'AI app' 
   async function soft(path, { method = 'GET', body, timeout = 20000 } = {}) {
     const k = key();
     if (!k) throw new Error(NO_KEY);
-    const res = await fetch(`${base()}${path}`, { method, headers: { 'content-type': 'application/json', 'user-agent': 'quarter4-mcp', authorization: `Bearer ${k}` }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(timeout) });
+    const res = await fetch(`${base()}${path}`, { method, headers: { 'content-type': 'application/json', 'user-agent': 'quint-ai-mcp', authorization: `Bearer ${k}` }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(timeout) });
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, ...data };
   }
@@ -92,14 +92,14 @@ export function createCloud({ persist = false, client: initialClient = 'AI app' 
     /** Shown on the approval page, e.g. "claude-code" or "codex". */
     clientName: (n) => { client = String(n).slice(0, 40); },
 
-    /** Start (or check) the browser approval that links this AI app to a Quarter4 account. */
+    /** Start (or check) the browser approval that links this AI app to a Quint AI account. */
     async connect() {
       if (key() && !pending) {
         const me = await call('/v1/me').catch(() => null);
         if (me) return { connected: true, email: me.email, plan: me.plan, dashboard: `${base()}/dashboard`, ...(lastResult?.savedTo ? { savedTo: lastResult.savedTo } : {}) };
       }
       if (!persist) {
-        throw new Error(`This hosted Quarter4 server cannot store a key between requests. Sign in at ${base()}/dashboard, create an API key, and add it to this connector's settings as QUARTER4_API_KEY, or run Quarter4 locally (npx quarter4-mcp) where "connect" works in one step.`);
+        throw new Error(`This hosted Quint AI server cannot store a key between requests. Sign in at ${base()}/dashboard, create an API key, and add it to this connector's settings as QUINT_AI_API_KEY, or run Quint AI locally (npx quint-ai-mcp) where "connect" works in one step.`);
       }
       if (pending) {
         const done = await pollOnce();
@@ -121,7 +121,7 @@ export function createCloud({ persist = false, client: initialClient = 'AI app' 
     kit: (b) => call('/v1/kits', { method: 'POST', body: b }),
     updateKit: (id, b) => call(`/v1/kits/${id}`, { method: 'PUT', body: b }),
     async kitPhoto(id, key, buf, type) {
-      const res = await fetch(`${base()}/v1/kits/${id}/photos/${key}`, { method: 'PUT', headers: { authorization: `Bearer ${keyOf()}`, 'content-type': type, 'user-agent': 'quarter4-mcp' }, body: buf, signal: AbortSignal.timeout(30000) });
+      const res = await fetch(`${base()}/v1/kits/${id}/photos/${key}`, { method: 'PUT', headers: { authorization: `Bearer ${keyOf()}`, 'content-type': type, 'user-agent': 'quint-ai-mcp' }, body: buf, signal: AbortSignal.timeout(30000) });
       if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `upload ${res.status}`);
       return true;
     },
@@ -130,7 +130,7 @@ export function createCloud({ persist = false, client: initialClient = 'AI app' 
     countRun: (tool, passed) => call('/v1/metrics', { method: 'POST', body: { tool, passed } }),
     getKit: (id) => call(`/v1/kits/${id}`),
     async uploadAsset(buf, type, name) {
-      const res = await fetch(`${base()}/v1/assets${name ? `?name=${encodeURIComponent(name)}` : ''}`, { method: 'POST', headers: { authorization: `Bearer ${keyOf()}`, 'content-type': type, 'user-agent': 'quarter4-mcp' }, body: buf, signal: AbortSignal.timeout(60000) });
+      const res = await fetch(`${base()}/v1/assets${name ? `?name=${encodeURIComponent(name)}` : ''}`, { method: 'POST', headers: { authorization: `Bearer ${keyOf()}`, 'content-type': type, 'user-agent': 'quint-ai-mcp' }, body: buf, signal: AbortSignal.timeout(60000) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? `upload ${res.status}`);
       return data;

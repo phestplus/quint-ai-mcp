@@ -1,13 +1,13 @@
 {
-  "name": "quarter4",
-  "version": "0.7.0",
+  "name": "quint-ai",
+  "version": "0.8.0",
   "description": "Year-round marketing engine for creators and sellers: holidays, shopping days and live trends for 100+ countries, niche-aware content plans, posts, image and video briefs, free licensed photos, and cinematic product sales pages.",
   "author": {
     "name": "phestplus",
     "url": "https://github.com/phestplus"
   },
-  "homepage": "https://phestplus.github.io/quarter4-mcp/",
-  "repository": "https://github.com/phestplus/quarter4-mcp",
+  "homepage": "https://phestplus.github.io/quint-ai-mcp/",
+  "repository": "https://github.com/phestplus/quint-ai-mcp",
   "license": "MIT",
   "keywords": [
     "content-creator",
@@ -25,15 +25,15 @@
   "skills": "./skills/",
   "mcpServers": "./mcp.json",
   "interface": {
-    "displayName": "Quarter4",
+    "displayName": "Quint AI",
     "shortDescription": "Plan, create and sell all year",
     "longDescription": "Understands messy requests, finds the holidays and live trends that matter for your country and niche, plans content per platform, writes posts and video scripts, finds free licensed photos and builds cinematic sales pages around your product.",
     "developerName": "phestplus",
     "category": "Productivity",
-    "websiteURL": "https://phestplus.github.io/quarter4-mcp/",
+    "websiteURL": "https://phestplus.github.io/quint-ai-mcp/",
     "defaultPrompt": [
-      "Use Quarter4: I sell sneakers in Lagos, help me with Black Friday content for Instagram and WhatsApp.",
-      "Use Quarter4 to build a sales page for my dresses with this photo."
+      "Use Quint AI: I sell sneakers in Lagos, help me with Black Friday content for Instagram and WhatsApp.",
+      "Use Quint AI to build a sales page for my dresses with this photo."
     ],
     "brandColor": "#FACC15"
   }
