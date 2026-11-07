@@ -39231,7 +39231,7 @@ var YEAR_GLOBAL_REACH = {
 
 // src/events.js
 var CATEGORIES = ["shopping", "cultural", "religious", "awareness", "seasonal", "civic"];
-var Q4_EVENTS = [
+var END_OF_YEAR_EVENTS = [
   // October
   {
     id: "ng-independence",
@@ -39609,7 +39609,7 @@ var Q4_EVENTS = [
     hashtags: ["#NewYear", "#HappyNewYear"]
   }
 ];
-var EVENTS = [...YEAR_EVENTS, ...Q4_EVENTS];
+var EVENTS = [...YEAR_EVENTS, ...END_OF_YEAR_EVENTS];
 
 // src/dates.js
 function ymd(date6) {
@@ -40922,9 +40922,9 @@ function pickFormat(p, assetType) {
 import { mkdirSync, readFileSync, writeFileSync, chmodSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-var base = () => (process.env.QUARTER4_API_URL || "https://q4.erasstack.com").replace(/\/+$/, "");
-var credFile = () => join(process.env.QUARTER4_HOME || join(homedir(), ".quarter4"), "credentials.json");
-var NO_KEY = 'Not connected to Quarter4 Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';
+var base = () => (process.env.QUINT_AI_API_URL || "https://quint.erasstack.com").replace(/\/+$/, "");
+var credFile = () => join(process.env.QUINT_AI_HOME || join(homedir(), ".quint-ai"), "credentials.json");
+var NO_KEY = 'Not connected to Quint AI Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';
 function readSaved() {
   try {
     const c = JSON.parse(readFileSync(credFile(), "utf8"));
@@ -40949,25 +40949,25 @@ function createCloud({ persist = false, client: initialClient = "AI app" } = {})
   let pending = null;
   let lastResult = null;
   const keyOf = () => key();
-  const key = () => process.env.QUARTER4_API_KEY || memKey || (persist ? readSaved()?.apiKey : null) || null;
+  const key = () => process.env.QUINT_AI_API_KEY || memKey || (persist ? readSaved()?.apiKey : null) || null;
   async function api(path, { method = "GET", body, auth = true } = {}) {
     const k = key();
     if (auth && !k) throw new Error(NO_KEY);
     const res = await fetch(`${base()}${path}`, {
       method,
-      headers: { "content-type": "application/json", "user-agent": "quarter4-mcp", ...auth ? { authorization: `Bearer ${k}` } : {} },
+      headers: { "content-type": "application/json", "user-agent": "quint-ai-mcp", ...auth ? { authorization: `Bearer ${k}` } : {} },
       body: body ? JSON.stringify(body) : void 0,
       signal: AbortSignal.timeout(2e4)
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok && res.status !== 202 && res.status !== 410) throw new Error(data.error ?? `Quarter4 Cloud returned ${res.status}`);
+    if (!res.ok && res.status !== 202 && res.status !== 410) throw new Error(data.error ?? `Quint AI Cloud returned ${res.status}`);
     return { ...data, httpStatus: res.status };
   }
   const strip2 = ({ httpStatus, ...d }) => d;
   async function soft(path, { method = "GET", body, timeout = 2e4 } = {}) {
     const k = key();
     if (!k) throw new Error(NO_KEY);
-    const res = await fetch(`${base()}${path}`, { method, headers: { "content-type": "application/json", "user-agent": "quarter4-mcp", authorization: `Bearer ${k}` }, body: body ? JSON.stringify(body) : void 0, signal: AbortSignal.timeout(timeout) });
+    const res = await fetch(`${base()}${path}`, { method, headers: { "content-type": "application/json", "user-agent": "quint-ai-mcp", authorization: `Bearer ${k}` }, body: body ? JSON.stringify(body) : void 0, signal: AbortSignal.timeout(timeout) });
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, ...data };
   }
@@ -41005,14 +41005,14 @@ function createCloud({ persist = false, client: initialClient = "AI app" } = {})
     clientName: (n) => {
       client = String(n).slice(0, 40);
     },
-    /** Start (or check) the browser approval that links this AI app to a Quarter4 account. */
+    /** Start (or check) the browser approval that links this AI app to a Quint AI account. */
     async connect() {
       if (key() && !pending) {
         const me = await call("/v1/me").catch(() => null);
         if (me) return { connected: true, email: me.email, plan: me.plan, dashboard: `${base()}/dashboard`, ...lastResult?.savedTo ? { savedTo: lastResult.savedTo } : {} };
       }
       if (!persist) {
-        throw new Error(`This hosted Quarter4 server cannot store a key between requests. Sign in at ${base()}/dashboard, create an API key, and add it to this connector's settings as QUARTER4_API_KEY, or run Quarter4 locally (npx quarter4-mcp) where "connect" works in one step.`);
+        throw new Error(`This hosted Quint AI server cannot store a key between requests. Sign in at ${base()}/dashboard, create an API key, and add it to this connector's settings as QUINT_AI_API_KEY, or run Quint AI locally (npx quint-ai-mcp) where "connect" works in one step.`);
       }
       if (pending) {
         const done = await pollOnce();
@@ -41036,7 +41036,7 @@ function createCloud({ persist = false, client: initialClient = "AI app" } = {})
     kit: (b) => call("/v1/kits", { method: "POST", body: b }),
     updateKit: (id, b) => call(`/v1/kits/${id}`, { method: "PUT", body: b }),
     async kitPhoto(id, key2, buf, type) {
-      const res = await fetch(`${base()}/v1/kits/${id}/photos/${key2}`, { method: "PUT", headers: { authorization: `Bearer ${keyOf()}`, "content-type": type, "user-agent": "quarter4-mcp" }, body: buf, signal: AbortSignal.timeout(3e4) });
+      const res = await fetch(`${base()}/v1/kits/${id}/photos/${key2}`, { method: "PUT", headers: { authorization: `Bearer ${keyOf()}`, "content-type": type, "user-agent": "quint-ai-mcp" }, body: buf, signal: AbortSignal.timeout(3e4) });
       if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `upload ${res.status}`);
       return true;
     },
@@ -41045,7 +41045,7 @@ function createCloud({ persist = false, client: initialClient = "AI app" } = {})
     countRun: (tool, passed) => call("/v1/metrics", { method: "POST", body: { tool, passed } }),
     getKit: (id) => call(`/v1/kits/${id}`),
     async uploadAsset(buf, type, name) {
-      const res = await fetch(`${base()}/v1/assets${name ? `?name=${encodeURIComponent(name)}` : ""}`, { method: "POST", headers: { authorization: `Bearer ${keyOf()}`, "content-type": type, "user-agent": "quarter4-mcp" }, body: buf, signal: AbortSignal.timeout(6e4) });
+      const res = await fetch(`${base()}/v1/assets${name ? `?name=${encodeURIComponent(name)}` : ""}`, { method: "POST", headers: { authorization: `Bearer ${keyOf()}`, "content-type": type, "user-agent": "quint-ai-mcp" }, body: buf, signal: AbortSignal.timeout(6e4) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? `upload ${res.status}`);
       return data;
@@ -41072,7 +41072,7 @@ function createCloud({ persist = false, client: initialClient = "AI app" } = {})
 }
 
 // src/images.js
-var UA = "quarter4-mcp (https://github.com/phestplus/quarter4-mcp)";
+var UA = "quint-ai-mcp (https://github.com/phestplus/quint-ai-mcp)";
 var TRADEMARKS = ["nike", "adidas", "converse", "vans", "puma", "reebok", "yeezy", "jordan", "new balance", "asics", "fila", "gucci", "louis vuitton", "chanel", "prada", "dior", "hermes", "rolex", "apple", "iphone", "macbook", "samsung", "sony", "playstation", "xbox", "nintendo", "toyota", "mercedes", "bmw", "audi", "ferrari", "lamborghini", "porsche", "tesla", "ford", "honda", "lexus", "range rover", "kia", "chevrolet", "corvette", "hyundai", "nissan", "volkswagen", "volvo", "jaguar", "bentley", "rolls-royce", "maserati", "mazda", "subaru", "jeep", "peugeot", "renault", "fiat", "mclaren", "bugatti", "aston martin", "coca-cola", "pepsi", "starbucks", "mcdonald", "ikea", "zara", "h&m", "supreme", "balenciaga", "off-white", "lego", "disney", "barbie", "marvel"];
 var brandRisk = (text) => TRADEMARKS.find((t) => String(text ?? "").toLowerCase().includes(t)) ?? null;
 var strip = (html) => String(html ?? "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
@@ -41120,7 +41120,7 @@ async function unsplash(q, { orientation, perPage }) {
     height: p.height,
     alt: p.alt_description || q,
     author: p.user.name,
-    authorUrl: `${p.user.links.html}?utm_source=quarter4&utm_medium=referral`,
+    authorUrl: `${p.user.links.html}?utm_source=quint-ai&utm_medium=referral`,
     page: p.links.html,
     license: "Unsplash License",
     licenseUrl: "https://unsplash.com/license",
@@ -41216,7 +41216,7 @@ async function findImages(query, o = {}) {
   return {
     images: images.slice(0, count),
     ...dropped ? { droppedAsUnrelated: dropped } : {},
-    ...images.length ? {} : { nothingFits: `Nothing found matches "${query}"${terms.length ? ` (looked for: ${terms.join(", ")})` : ""}. Try simpler words, use the seller's own photos, or connect Quarter4 Cloud for studio photo search.` },
+    ...images.length ? {} : { nothingFits: `Nothing found matches "${query}"${terms.length ? ` (looked for: ${terms.join(", ")})` : ""}. Try simpler words, use the seller's own photos, or connect Quint AI Cloud for studio photo search.` },
     providersTried,
     errors,
     note: [
@@ -41261,7 +41261,7 @@ async function matchingImages({ nicheId, product = "", attributes = "", mood = "
   const ranked = clean2.filter(hit).filter(typeOk).map(rank).filter((x) => x.pos >= 0 && x.pos <= 2 && !(productShot && x.people)).sort((a, b) => b.studio - a.studio || b.attr - a.attr || a.pos - b.pos).map((x) => x.im);
   const broad = [product || words[0], mood].filter(Boolean).join(" ").trim();
   if (!ranked.length && broad && broad !== query) return matchingImages({ nicheId, product, attributes: "", mood: "", orientation, count, search, productShot, mustMatch });
-  return { query, images: ranked.slice(0, count), providersTried: r.providersTried ?? ["quarter4-cloud"], words };
+  return { query, images: ranked.slice(0, count), providersTried: r.providersTried ?? ["quint-ai-cloud"], words };
 }
 function typeWords(name) {
   const n = String(name ?? "").toLowerCase();
@@ -41299,7 +41299,7 @@ function questionsFor(task, o) {
 var ASK_RULE = 'If askUser is not empty, ask the user these questions in one short message before sharing or publishing (keep their wording simple), then call the tool again with the answers. Do not ask about anything in "assumed".';
 
 // src/live.js
-var UA2 = "quarter4-mcp (https://github.com/phestplus/quarter4-mcp)";
+var UA2 = "quint-ai-mcp (https://github.com/phestplus/quint-ai-mcp)";
 var cache = /* @__PURE__ */ new Map();
 async function cached2(key, ttlMs, fn) {
   const hit = cache.get(key);
@@ -41363,7 +41363,7 @@ function rssItems(xml) {
 }
 async function trends(iso) {
   return cached2(`tr:${iso}`, 30 * 6e4, async () => {
-    const xml = await get(`https://trends.google.com/trending/rss?geo=${iso}`, { type: "text", ua: "Mozilla/5.0 (compatible; quarter4-mcp)" });
+    const xml = await get(`https://trends.google.com/trending/rss?geo=${iso}`, { type: "text", ua: "Mozilla/5.0 (compatible; quint-ai-mcp)" });
     return rssItems(xml).map((t) => {
       const text = `${t.topic} ${t.news.map((n) => n.title).join(" ")}`;
       return { ...t, country: iso, sensitive: SENSITIVE.test(text) };
@@ -41558,7 +41558,7 @@ function startCampaign(o) {
 }
 
 // src/export.js
-var COLUMNS = ["date", "weekday", "platform", "format", "size", "kind", "event", "phase", "objective", "angle", "cta", "hashtags", "caution", "status"];
+var COLUMNS = ["date", "time", "weekday", "platform", "format", "size", "kind", "event", "phase", "objective", "angle", "cta", "hashtags", "caution", "status"];
 function csvCell(v) {
   if (v == null) return "";
   const s = Array.isArray(v) ? v.join(" ") : String(v);
@@ -41584,23 +41584,28 @@ function fold(line) {
   }
   return parts.join("\r\n ");
 }
-function toICS(slots, calName = "Q4 content plan") {
+var endOf = (t) => {
+  const [h, m] = t.split(":").map(Number);
+  const e = Math.min(h * 60 + m + 30, 23 * 60 + 59);
+  return `${String(Math.floor(e / 60)).padStart(2, "0")}${String(e % 60).padStart(2, "0")}`;
+};
+function toICS(slots, calName = "Content plan") {
   const stamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//quarter4//content plan//EN", "CALSCALE:GREGORIAN", `X-WR-CALNAME:${icsText(calName)}`];
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//quint-ai//content plan//EN", "CALSCALE:GREGORIAN", `X-WR-CALNAME:${icsText(calName)}`];
   slots.forEach((s, i) => {
     const d = s.date.replace(/-/g, "");
     const next = addDays(s.date, 1).replace(/-/g, "");
     const title = `${s.platform} ${s.format}: ${s.event ?? s.phase}${s.event ? ` (${s.phase})` : ""}`;
     const desc = [`Objective: ${s.objective}`, `Angle: ${s.angle}`, `CTA: ${s.cta}`, s.size ? `Size: ${s.size} (${s.aspect})` : "", s.hashtags?.length ? `Hashtags: ${s.hashtags.join(" ")}` : "", s.caution ? `Caution: ${s.caution}` : ""].filter(Boolean).join("\n");
-    lines.push("BEGIN:VEVENT", `UID:${d}-${i}-${s.platform}@quarter4`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${next}`, `SUMMARY:${icsText(title)}`, `DESCRIPTION:${icsText(desc)}`, "TRANSP:TRANSPARENT", "END:VEVENT");
+    lines.push("BEGIN:VEVENT", `UID:${d}-${i}-${s.platform}@quint-ai`, `DTSTAMP:${stamp}`, ...s.time ? [`DTSTART:${d}T${s.time.replace(":", "")}00`, `DTEND:${d}T${endOf(s.time)}00`] : [`DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${next}`], `SUMMARY:${icsText(title)}`, `DESCRIPTION:${icsText(desc)}`, "TRANSP:TRANSPARENT", "END:VEVENT");
   });
   lines.push("END:VCALENDAR");
   return lines.map(fold).join("\r\n") + "\r\n";
 }
 function toMarkdown(plan) {
-  const rows = plan.slots.map((s) => `| ${s.date} | ${s.weekday.slice(0, 3)} | ${s.platform} | ${s.format} | ${s.event ?? "-"} | ${s.phase} | ${String(s.angle).replace(/\|/g, "/")} | ${s.cta} |`);
+  const rows = plan.slots.map((s) => `| ${s.date} | ${s.time ?? "-"} | ${s.weekday.slice(0, 3)} | ${s.platform} | ${s.format} | ${s.event ?? "-"} | ${s.phase} | ${String(s.angle).replace(/\|/g, "/")} | ${s.cta} |`);
   return [
-    `# Q4 content plan: ${plan.brand}`,
+    `# Content plan: ${plan.brand}`,
     "",
     `${plan.window.start} \u2192 ${plan.window.end} \xB7 ${plan.platforms.join(", ")} \xB7 ${plan.postsPerWeekPerPlatform} posts/week/platform`,
     "",
@@ -41609,8 +41614,8 @@ function toMarkdown(plan) {
     ...plan.observances.length ? ["", "## Observances (no sales tie-ins)", ...plan.observances.map((e) => `- ${e.name}: ${e.date}`)] : [],
     "",
     "## Calendar",
-    "| Date | Day | Platform | Format | Event | Phase | Angle | CTA |",
-    "|---|---|---|---|---|---|---|---|",
+    "| Date | Time | Day | Platform | Format | Event | Phase | Angle | CTA |",
+    "|---|---|---|---|---|---|---|---|---|",
     ...rows,
     ""
   ].join("\n");
@@ -42540,7 +42545,7 @@ var M = {
   droplets: S("m-corner", "0 0 600 600", `<path d="M380 120c50 80 90 130 90 180a90 90 0 0 1-180 0c0-50 40-100 90-180z" ${fill(0.16)}/><path d="M220 330c-60 0-110 60-110 130 70 0 120-50 120-120z" ${stroke(3)}/>`),
   "ruled-lines": S("m-corner", "0 0 600 600", [0, 1, 2, 3, 4, 5].map((i) => `<path d="M140 ${160 + i * 60} H 540" ${stroke(2, 0.3)}/>`).join("") + `<path d="M180 120 V 520" style="fill:none;stroke:var(--ac);stroke-opacity:.5;stroke-width:3"/>`),
   rings: S("m-corner", "0 0 600 600", [110, 170, 230, 290].map((r) => `<circle cx="300" cy="300" r="${r}" ${stroke(2, 0.38)}/>`).join("")),
-  dots: S("m-corner", "0 0 420 420", `<defs><pattern id="q4dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="4" ${fill(0.4)}/></pattern></defs><rect width="420" height="420" style="fill:url(#q4dots)"/>`)
+  dots: S("m-corner", "0 0 420 420", `<defs><pattern id="quintdots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="4" ${fill(0.4)}/></pattern></defs><rect width="420" height="420" style="fill:url(#quintdots)"/>`)
 };
 var FAMILIES = {
   apps: ["joining-lines", "paired-circles", "arch"],
@@ -42639,7 +42644,7 @@ img{max-width:100%;display:block}h1,h2,h3{font-family:var(--d);font-weight:600;l
 .faq{max-width:760px;margin:0 auto;padding:clamp(48px,8vw,96px) 20px}.faq h2{text-align:center;font-size:clamp(30px,4vw,48px);margin-bottom:28px}.faq details{border-bottom:1px solid var(--bd);padding:18px 0}.faq summary{cursor:pointer;font-weight:600;font-size:18px;list-style:none}.faq summary::after{content:'+';float:right;color:var(--ac)}.faq details[open] summary::after{content:'\u2212'}.faq p{color:var(--mu)}
 .ft-mark{padding:clamp(60px,10vw,140px) 16px 0;text-align:center;font:600 clamp(72px,17vw,260px)/.85 var(--d);letter-spacing:-.04em;color:color-mix(in srgb,var(--tx) 90%,var(--bg));overflow:hidden;white-space:nowrap}.ft-mark svg{height:clamp(72px,17vw,260px);width:auto;display:inline-block}
 .ft{padding:36px 20px 120px;text-align:center;color:var(--mu);font-size:13px}
-.float{animation:q4f 7s ease-in-out infinite}.float.d{animation-delay:-3.5s}@keyframes q4f{50%{transform:translateY(-10px)}}
+.float{animation:quintf 7s ease-in-out infinite}.float.d{animation-delay:-3.5s}@keyframes quintf{50%{transform:translateY(-10px)}}
 @media(prefers-reduced-motion:reduce){.float{animation:none}.s-thread path{stroke-dashoffset:0}.s-line i{transform:none}}
 </style></head>
 <body${lightText ? ' class="m-light"' : ""}>
@@ -43182,6 +43187,16 @@ function score(phase, ev) {
   const phaseWeight = { launch: 6, "last-chance": 5, "early-access": 4, "warm-up": 3, tease: 2, "thank-you": 1 }[phase];
   return IMPACT_RANK2[ev.impact] * 10 + phaseWeight + (ev.relevance?.score ?? 0) / 10 + ev.leadDays / 1e3;
 }
+var POST_TIMES = { instagram: ["12:30", "19:00"], tiktok: ["19:00", "21:00"], facebook: ["13:00", "19:30"], whatsapp: ["08:00", "18:30"], linkedin: ["08:30", "12:00"], x: ["09:00", "18:00"], youtube: ["17:00", "19:00"], email: ["10:00", "17:00"], telegram: ["09:00", "19:00"], pinterest: ["14:00", "20:00"] };
+var PHASE_TIME = { launch: 0, "last-chance": 1 };
+function postTimeFor(platform, date6, phase, custom2 = {}) {
+  if (/^([01]\d|2[0-3]):[0-5]\d$/.test(custom2?.[platform] ?? "")) return custom2[platform];
+  const t = POST_TIMES[platform] ?? ["10:00", "19:00"];
+  if (phase in PHASE_TIME) return t[PHASE_TIME[phase]];
+  const day = (/* @__PURE__ */ new Date(`${date6}T00:00:00Z`)).getUTCDay();
+  if (day === 0 || day === 6) return t[1];
+  return t[Number(date6.slice(8)) % 2];
+}
 function buildPlan(o) {
   const notes = [];
   const start = o.startDate ?? today();
@@ -43286,6 +43301,7 @@ function buildPlan(o) {
       const isMotion = /reel|video|short|story|status/.test(format);
       slots.push({
         date: d,
+        time: postTimeFor(platformId, d, slot.phase, o.postTimes),
         weekday: weekdayName(d),
         platform: platformId,
         format,
@@ -43305,6 +43321,7 @@ function buildPlan(o) {
     offer,
     offerType,
     interpreted: { platforms, regions, niche: niche.label, notes },
+    timesNote: "Posting times are suggestions in your audience's local time. Change them to suit you, and let your results guide you.",
     ...featured.length ? { featured } : {},
     window: { start, end },
     postsPerWeekPerPlatform: perWeek,
@@ -43437,7 +43454,7 @@ function buildKit(o) {
   const priceRow = hasOffer && o.price ? `<p class="g-pr"><b>${esc3(o.price)}</b>${o.originalPrice ? `<s>${esc3(o.originalPrice)}</s>` : ""}</p>` : "";
   const offerHead = (fallback, own3) => own3 ? `<h2 class="g-h">${esc3(own3)}</h2>` : typeLed && off ? "" : `<h2 class="g-h">${esc3(offTxt ? cap3(offTxt) : fallback)}</h2>`;
   const head = (h) => `${deco}<div class="g-top"><span class="g-brand">${o.logoUrl ? `<img src="${esc3(img(o.logoUrl))}" alt="">` : wordmarkHtml(o)}</span>${event ? `<span class="g-ev">${esc3(event)}</span>` : ""}</div>${h}`;
-  const wm = '<div class="q4wm">Made with Quarter4</div>';
+  const wm = '<div class="quintwm">Made with Quint AI</div>';
   const verbs = VERBS[offerType] ?? VERBS.physical;
   const deco = motifFor(nicheId, o.brand, o.illustration?.motifs ?? o.motifs).svg;
   const ICON = {
@@ -43667,9 +43684,9 @@ ${MOTIF_CSS}
 .g.bleed::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 24%,rgba(0,0,0,0) 46%,rgba(0,0,0,.82) 100%)}
 .g.bleed .g-top,.g.bleed .g-bot{color:#fff}.g.bleed .g-pr s{color:rgba(255,255,255,.72)}.g.bleed .g-cta{color:rgba(255,255,255,.88)}
 .g.bleed .g-chip{background:rgba(255,255,255,.16);color:#fff}.g.bleed .g-feats li{border-color:rgba(255,255,255,.4);color:#fff}.g.bleed .deco{display:none}
-.g.bleed .rep-l{top:150px;left:72px;bottom:auto;z-index:2}.g.bleed .q4wm{color:#fff;z-index:3}
-.q4wm{display:none;position:absolute;right:28px;bottom:24px;font:600 22px/1 var(--b);color:var(--tx);opacity:.6}
-${o.watermark ? ".q4wm{display:block}" : ""}
+.g.bleed .rep-l{top:150px;left:72px;bottom:auto;z-index:2}.g.bleed .quintwm{color:#fff;z-index:3}
+.quintwm{display:none;position:absolute;right:28px;bottom:24px;font:600 22px/1 var(--b);color:var(--tx);opacity:.6}
+${o.watermark ? ".quintwm{display:block}" : ""}
 </style></head><body>
 <div class="bar"><div class="bar-in"><span class="mark" aria-hidden="true">${esc3(o.brand.slice(0, 1).toUpperCase())}</span><b class="bar-b">${esc3(o.brand)}</b><span class="bar-c" data-count>${posts.length} posts</span><button type="button" class="bar-dl" data-dlall>${UI.download}<span>Download all</span></button></div></div>
 <header class="top"><p class="eyebrow"><i></i>Content kit${THEMES[o.theme] && o.theme !== "default" ? ` \xB7 ${esc3(t.eyebrow)}` : ""}</p><h1>${posts.length} posts, ready to share</h1><p>Captions are written for each app. Edit anything, then share straight from your phone.${link ? ` Every post links to <a href="${esc3(link)}">${esc3(link.replace(/^https?:\/\//, ""))}</a>.` : ""}</p>
@@ -43721,7 +43738,7 @@ function files(card){return Promise.all(Array.prototype.map.call(card.querySelec
 function save(f){var a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
 function refresh(){document.querySelectorAll('.card').forEach(function(c){var st=c.querySelector('[data-st]');var r=c.querySelector('.ph.rep');c.classList.toggle('rep-card',!!r);if(st){var lab=r?'Ready, uses a representative photo':'Ready';st.title=lab;st.setAttribute('aria-label',lab)}});var cnt=document.querySelector('[data-count]');if(cnt)cnt.textContent=document.querySelectorAll('.card').length+' posts ready'}
 document.addEventListener('click',function(e){if(!e.target.closest('[data-dlall]'))return;var cards=[].slice.call(document.querySelectorAll('.card'));var b=e.target.closest('[data-dlall]');b.lastChild.textContent='Preparing...';cards.reduce(function(pr,c){return pr.then(function(){return files(c).then(function(fs){fs.forEach(save)})})},Promise.resolve()).then(function(){b.lastChild.textContent='Download all'},function(){b.lastChild.textContent='Try again'})});
-var KIT=window.Q4_KIT||null;
+var KIT=window.QUINT_KIT||null;
 function setPhoto(key,url,scope){(/^m/.test(key)?scope:document).querySelectorAll('.ph[data-p="'+key+'"]').forEach(function(ph){ph.classList.remove('need');ph.classList.remove('rep');var tag=ph.querySelector('.rep-l');if(tag)tag.remove();var im=ph.querySelector('img')||document.createElement('img');im.removeAttribute('crossorigin');im.src=url;im.alt='';if(!im.parentNode)ph.insertBefore(im,ph.firstChild)});refresh()}
 document.querySelectorAll('.card').forEach(function(card){
   card.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){card.querySelectorAll('[data-tab]').forEach(function(x){x.setAttribute('aria-selected',String(x===b))});card.querySelectorAll('[data-cap]').forEach(function(t){t.hidden=t.getAttribute('data-cap')!==b.getAttribute('data-tab')});links()})});
@@ -43734,7 +43751,7 @@ document.querySelectorAll('.card').forEach(function(card){
 if(KIT&&KIT.photos)Object.keys(KIT.photos).forEach(function(k){setPhoto(k,KIT.photos[k],document)});
 document.querySelectorAll('.card').forEach(function(card){var f=card.querySelector('[data-flag]'),box=card.querySelector('[data-fb]');if(!f)return;if(!KIT){f.hidden=true;return}
   f.addEventListener('click',function(){box.hidden=!box.hidden});
-  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__q4/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quarter4 team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
+  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__quint/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quint AI team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
 document.querySelectorAll('.card').forEach(function(card){var pl=card.querySelector('[data-play]'),vd=card.querySelector('[data-video]');if(pl)pl.addEventListener('click',function(){preview(card)});if(vd)vd.addEventListener('click',function(){video(card)})});
 refresh();
 })();
@@ -43798,7 +43815,7 @@ function checkOutput({ kind, html, args: args2 = {}, posts = [], contentOnly = f
 }
 
 // src/extract.js
-var UA3 = "quarter4-mcp brand reader (+https://github.com/phestplus/quarter4-mcp)";
+var UA3 = "quint-ai-mcp brand reader (+https://github.com/phestplus/quint-ai-mcp)";
 var HEX6 = /#([0-9a-f]{6}|[0-9a-f]{3})\b/gi;
 async function get2(url2, ms = 12e3, max = 6e5) {
   const r = await fetch(url2, { headers: { "user-agent": UA3, accept: "text/html,text/css,*/*" }, redirect: "follow", signal: AbortSignal.timeout(ms) });
@@ -43988,7 +44005,7 @@ var ACCEPTANCE = [
 
 // src/server.js
 import { tmpdir } from "node:os";
-var VERSION = "0.7.0";
+var VERSION = "0.8.0";
 var date5 = external_exports.string().regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD");
 var list = external_exports.union([external_exports.array(external_exports.string()), external_exports.string()]);
 var platformList = list.describe(`Platforms, any spelling: ${PLATFORM_IDS.join(", ")} (also "ig", "tik tok", "newsletter", "status")`);
@@ -44004,7 +44021,7 @@ var wrap = (fn) => async (args2) => {
   }
 };
 function createServer2({ allowFileWrites = false } = {}) {
-  const server = new McpServer({ name: "quarter4", version: VERSION });
+  const server = new McpServer({ name: "quint-ai", version: VERSION });
   const hexColor = external_exports.string().regex(/^#[0-9a-fA-F]{6}$/);
   const brandStyle = external_exports.object({
     mode: external_exports.enum(["light", "dark"]).optional(),
@@ -44101,10 +44118,11 @@ function createServer2({ allowFileWrites = false } = {}) {
       startDate: date5.optional().describe("Default today"),
       endDate: date5.optional().describe("Default 60 days from start"),
       postsPerWeek: external_exports.number().int().min(1).max(7).optional().describe("Per platform; default 4"),
+      postTimes: external_exports.record(external_exports.string(), external_exports.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/)).optional().describe(`Seller's own posting times per platform, 24-hour, e.g. { "instagram": "18:00" }. Every slot has a suggested time otherwise`),
       focusEvents: external_exports.array(external_exports.string()).optional().describe('Events to campaign around, ids or names ("black friday", "eid", "valentines")'),
       offer: external_exports.string().optional().describe('Written any way: "30% off", "N5k off", "BOGO", "free delivery"'),
       sellsProducts: external_exports.boolean().optional().describe("false for creators who only publish content; default true"),
-      featured: external_exports.array(external_exports.string()).max(5).optional().describe("Products to push, best seller first. When connected to Quarter4 Cloud this is filled from real WhatsApp order taps."),
+      featured: external_exports.array(external_exports.string()).max(5).optional().describe("Products to push, best seller first. When connected to Quint AI Cloud this is filled from real WhatsApp order taps."),
       useStats: external_exports.boolean().optional().describe("Use sales page stats to pick featured products (default true when connected)"),
       format: external_exports.enum(["json", "markdown"]).optional().describe("Default json")
     },
@@ -44118,7 +44136,7 @@ function createServer2({ allowFileWrites = false } = {}) {
       const top = Object.entries(items).sort((x, y) => y[1] - x[1]).slice(0, 3);
       if (top.length) {
         a = { ...a, featured: top.map(([k]) => k) };
-        signals = { source: "Quarter4 page stats, last 14 days", topProducts: top.map(([name, taps]) => ({ name, orderTaps: taps })), tip: `${top[0][0]} gets the most order taps, so selling posts feature it most often.` };
+        signals = { source: "Quint AI page stats, last 14 days", topProducts: top.map(([name, taps]) => ({ name, orderTaps: taps })), tip: `${top[0][0]} gets the most order taps, so selling posts feature it most often.` };
       }
     }
     const plan = { ...buildPlan(a), ...signals ? { salesSignals: signals } : {} };
@@ -44153,7 +44171,7 @@ function createServer2({ allowFileWrites = false } = {}) {
   }, wrap(async (a) => json3(buildBrief({ ...a, eventId: a.eventId ? eventRef(a.eventId) : void 0 }))));
   server.registerTool("landing_page", {
     title: "Sales landing page",
-    description: `Write the copy yourself and pass it (headline, subheadline, features, ctaText, statement, displayName); Quarter4's own copy is only a plain fallback and the result lists which parts used it (fallbacks). Pass the brand's look with brandStyle (mode, palette, fontDisplay, fontBody, wordmark) and its rules with positioning and avoidWords, or save them once with brand_profile. Every page is checked (checks) before you show it. Generate a premium, ready-to-deploy sales page (one HTML file) built around what the user sells. Works from minimal input (brand + product): the copy is written from the facts given and never invents reviews, guarantees or prices.
+    description: `Write the copy yourself and pass it (headline, subheadline, features, ctaText, statement, displayName); Quint AI's own copy is only a plain fallback and the result lists which parts used it (fallbacks). Pass the brand's look with brandStyle (mode, palette, fontDisplay, fontBody, wordmark) and its rules with positioning and avoidWords, or save them once with brand_profile. Every page is checked (checks) before you show it. Generate a premium, ready-to-deploy sales page (one HTML file) built around what the user sells. Works from minimal input (brand + product): the copy is written from the facts given and never invents reviews, guarantees or prices.
 An art director picks the page structure from the niche: cinematic full-bleed scenes for cars, gadgets and fitness; a split showcase (sticky photos beside scrolling story) for fashion, home, food and services; a product stage (product spins and zooms with scroll, stickers pop) for shoes, beauty, jewellery and kids; editorial for courses, software and digital products. Motion is scroll-linked (pinned scenes, scrubbed zoom, horizontal galleries, text that fills as you scroll), not timed fades. Fonts, navigation, buttons and countdown style vary per brand (re-roll with variant).
 Media: pass the seller's own photos (images, productImage), a turntable video (videoUrl, scrubbed by scroll) or a 3D model (modelUrl, .glb, rotates with scroll and can be dragged). With no media, free mood photos are fetched automatically (autoImages).
 A holiday theme (${Object.keys(THEMES).join(", ")}) adds its palette and name; with layout "signature" and no product, the art-directed holiday scenes are used instead.
@@ -44315,9 +44333,9 @@ ${html}` }] };
   }, wrap(async (a) => json3(await findImages(a.query, a))));
   server.registerTool("publish_page", {
     title: "Publish a page online",
-    description: `Put a sales page online and get a shareable link, e.g. https://q4-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user's own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).`,
+    description: `Put a sales page online and get a shareable link, e.g. https://quint-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user's own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).`,
     inputSchema: {
-      brand: external_exports.string().min(1).describe("Brand name; becomes the address q4-<brand>.erasstack.com"),
+      brand: external_exports.string().min(1).describe("Brand name; becomes the address quint-<brand>.erasstack.com"),
       path: external_exports.string().optional().describe('Page path, e.g. "black-friday"; empty for the home page'),
       role: external_exports.enum(["home", "campaign", "product", "legal", "review"]).optional().describe("home (site root, links live campaigns automatically), campaign (ends cleanly after endsAt), product, legal, or review (private, not indexed, does not use a page slot)"),
       endsAt: external_exports.string().optional().describe("For campaigns: when the offer ends (ISO with time zone). After it, the page says the offer has ended, then redirects home."),
@@ -44325,7 +44343,7 @@ ${html}` }] };
       file: external_exports.string().optional().describe("Local mode: path to an .html file"),
       page: external_exports.record(external_exports.string(), external_exports.any()).optional().describe("landing_page arguments to build and publish in one call"),
       title: external_exports.string().optional(),
-      force: external_exports.boolean().optional().describe("Publish even if Quarter4's checks find errors (not recommended).")
+      force: external_exports.boolean().optional().describe("Publish even if Quint AI's checks find errors (not recommended).")
     },
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
   }, wrap(async (a) => {
@@ -44337,7 +44355,7 @@ ${html}` }] };
     if (!pageHtml && a.page) pageHtml = buildLanding(await withProfile({ brand: a.brand, ...a.page }, ["brandStyle", "brandColor", "displayName", "offerType", "ctaUrl", "voice", "positioning", "avoidWords"], []));
     if (!pageHtml) throw new Error("Send html, file or page.");
     const checks = runChecks("publish_page", { kind: "page", html: pageHtml, args: { brand: a.brand, ...a.page ?? {} } });
-    if (!checks.passed && !a.force) return json3({ published: false, checks, next: "The page failed Quarter4's checks, so it was not published. Fix the errors, or pass force: true to publish anyway." });
+    if (!checks.passed && !a.force) return json3({ published: false, checks, next: "The page failed Quint AI's checks, so it was not published. Fix the errors, or pass force: true to publish anyway." });
     const r = await cloud.publish({ brand: a.brand, path: a.path, html: pageHtml, title: a.title, role: a.role, endsAt: a.endsAt ?? a.page?.deadline });
     return json3({ ...r, checks, share: `Share this link on WhatsApp, Instagram bio and Status: ${r.url}` });
   }));
@@ -44354,8 +44372,8 @@ ${html}` }] };
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
   }, wrap(async (a) => json3(a.check ? await cloud.domainStatus(a.hostname) : await cloud.connectDomain(a.hostname, a.site))));
   server.registerTool("cloud_account", {
-    title: "Quarter4 account and plans",
-    description: 'Quarter4 Cloud account. "connect" links this AI app to the user account: it returns a link and code the user approves in their browser (new users get a free account); call it again to finish. "status" shows plan, limits and sites. "pages" lists published pages. "dashboard" returns the web dashboard link (views, WhatsApp orders per product, plan). "upgrade" returns a secure Flutterwave card checkout link for Pro or Business, priced in Naira for Nigeria and US Dollars elsewhere. "signup" (fallback) emails a key instead. Never ask for passwords or card details in chat; always send the link.',
+    title: "Quint AI account and plans",
+    description: 'Quint AI Cloud account. "connect" links this AI app to the user account: it returns a link and code the user approves in their browser (new users get a free account); call it again to finish. "status" shows plan, limits and sites. "pages" lists published pages. "dashboard" returns the web dashboard link (views, WhatsApp orders per product, plan). "upgrade" returns a secure Flutterwave card checkout link for Pro or Business, priced in Naira for Nigeria and US Dollars elsewhere. "signup" (fallback) emails a sign-in link; the user then connects or creates a key from their profile. Never ask for passwords or card details in chat; always send the link.',
     inputSchema: {
       action: external_exports.enum(["connect", "status", "pages", "dashboard", "upgrade", "signup"]),
       email: external_exports.string().optional(),
@@ -44406,12 +44424,12 @@ ${html}` }] };
     },
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
   }, wrap(async (a) => {
-    if (!allowFileWrites) throw new Error("studio_photo runs on your own computer. Use the local Quarter4 server (npx quarter4-mcp), or ask the assistant to clean up the photo with its own image tools.");
+    if (!allowFileWrites) throw new Error("studio_photo runs on your own computer. Use the local Quint AI server (npx quint-ai-mcp), or ask the assistant to clean up the photo with its own image tools.");
     let input2 = a.input;
     if (/^https:\/\//.test(input2)) {
       const r = await fetch(input2, { signal: AbortSignal.timeout(2e4) });
       if (!r.ok || !/^image\//.test(r.headers.get("content-type") ?? "")) throw new Error("That link is not an image.");
-      input2 = resolve(`quarter4-photo-${Date.now()}.jpg`);
+      input2 = resolve(`quint-ai-photo-${Date.now()}.jpg`);
       await writeFile(input2, Buffer.from(await r.arrayBuffer()));
     }
     if (!existsSync(input2)) throw new Error(`File not found: ${input2}`);
@@ -44424,8 +44442,8 @@ ${html}` }] };
     return json3({ ...JSON.parse(line), next: "Pass this file as products[].image to content_kit or landing_page." });
   }));
   server.registerTool("report_issue", {
-    title: "Report a problem with Quarter4 output",
-    description: 'When the seller says something Quarter4 made is wrong ("off-brand", "wrong image", "copy does not fit", "looks generic", "not us"), call this with their words and what it was about. It goes to the Quarter4 team with the context, so the seller never has to write a report. Needs connect.',
+    title: "Report a problem with Quint AI output",
+    description: 'When the seller says something Quint AI made is wrong ("off-brand", "wrong image", "copy does not fit", "looks generic", "not us"), call this with their words and what it was about. It goes to the Quint AI team with the context, so the seller never has to write a report. Needs connect.',
     inputSchema: {
       what: external_exports.string().min(3).max(500).describe("What the seller said, in their words"),
       tool: external_exports.string().max(40).optional().describe("Which tool made it, e.g. content_kit, landing_page"),
@@ -44436,11 +44454,11 @@ ${html}` }] };
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
   }, wrap(async (a) => {
     const r = await cloud.reportIssues({ source: "user", tool: a.tool ?? "unknown", version: VERSION, issues: [{ rule: `user.${a.chip ?? "other"}`, severity: "error", message: a.what, sample: a.url }], args: a.args ?? {} });
-    return json3({ ok: true, ...r, note: "Thanks. The Quarter4 team gets this with the context. Meanwhile, tell me what to change and I will fix it now." });
+    return json3({ ok: true, ...r, note: "Thanks. The Quint AI team gets this with the context. Meanwhile, tell me what to change and I will fix it now." });
   }));
   server.registerTool("brand_profile", {
     title: "Saved brand profile",
-    description: "Save or read the seller's brand profile in Quarter4 Cloud (needs connect): voice, products with real prices, order link, colours and logo. Saved details fill in content_kit and sales pages automatically, so the seller does not repeat them. Logo and colours on graphics are a Pro feature. Only save prices the seller gave you.",
+    description: "Save or read the seller's brand profile in Quint AI Cloud (needs connect): voice, products with real prices, order link, colours and logo. Saved details fill in content_kit and sales pages automatically, so the seller does not repeat them. Logo and colours on graphics are a Pro feature. Only save prices the seller gave you.",
     inputSchema: {
       action: external_exports.enum(["get", "save"]),
       profile: external_exports.object({
@@ -44526,7 +44544,7 @@ ${html}` }] };
         return { ...p, image: hosted ? void 0 : `data:${type};base64,${buf.toString("base64")}`, representative: false };
       })) };
     }
-    const kit = buildKit({ ...a, watermark: !paid, proxy: hosted ? (url2, i) => /^data:/.test(url2) ? url2 : `/__q4/img/__KIT__/${i}` : void 0 });
+    const kit = buildKit({ ...a, watermark: !paid, proxy: hosted ? (url2, i) => /^data:/.test(url2) ? url2 : `/__quint/img/__KIT__/${i}` : void 0 });
     const { askUser, assumed } = questionsFor("kit", a);
     if (a.discountPercent || /\d\s*%|off/i.test(a.offer ?? "") || a.originalPrice) notes.push("Before you share: make sure your checkout or app actually charges the advertised sale price. Advertising a price you do not charge is a consumer-law risk (for example under Nigeria's FCCPA).");
     const summary = { posts: kit.posts, notes, ...askUser.length ? { askUser, howToAsk: ASK_RULE } : {}, assumed, checks: runChecks("content_kit", { kind: "kit", html: kit.html, args: { ...a, offerType: a.offerType }, posts: kit.posts, contentOnly: kit.contentOnly }) };
@@ -44547,7 +44565,7 @@ ${html}` }] };
   server.registerTool("content_kit", {
     title: "Ready-to-post content kit",
     description: `Make finished social graphics with captions for a sale or launch: offer post (4:5), product spotlights (1:1), a carousel, Story/WhatsApp Status (9:16), a last-call story and an X/LinkedIn card (16:9). Returns a review page where the seller edits captions, then taps Share (phone share sheet: Instagram, TikTok, WhatsApp with the image attached), uses share links, copies captions or downloads PNGs. Nothing is posted automatically.
-Connected to Quarter4 Cloud: the kit is hosted at a link (Free: 7 days with a small mark; Pro: 90 days, no mark, own logo and colours). Not connected (local): an HTML file is written instead.
+Connected to Quint AI Cloud: the kit is hosted at a link (Free: 7 days with a small mark; Pro: 90 days, no mark, own logo and colours). Not connected (local): an HTML file is written instead.
 Images: the seller's own photos are best (products[].image or images). If you can generate images yourself, generate them and pass their https URLs. Otherwise free licensed photos are found automatically (autoImages). Never invent prices or deadlines; leave them out if unknown.`,
     inputSchema: {
       brand: external_exports.string().min(1),
@@ -44602,14 +44620,14 @@ Images: the seller's own photos are best (products[].image or images). If you ca
       if (!r.ok) throw new Error(`Could not download ${src} (${r.status}).`);
       return { buf: Buffer.from(await r.arrayBuffer()), type: (r.headers.get("content-type") ?? "").split(";")[0] };
     }
-    if (!allowFileWrites) throw new Error("Local files only work when Quarter4 runs on your computer. Pass an https link instead.");
+    if (!allowFileWrites) throw new Error("Local files only work when Quint AI runs on your computer. Pass an https link instead.");
     if (!existsSync(src)) throw new Error(`File not found: ${src}`);
     const ext = extname(src).toLowerCase();
     return { buf: await readFile(src), type: { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".woff": "font/woff" }[ext] ?? "" };
   };
   server.registerTool("asset_upload", {
     title: "Upload a brand asset",
-    description: "Host the brand's own logo, wordmark SVG, illustrations, photos or web fonts on Quarter4 Cloud and get a permanent link to use in pages, kits and brand_profile (every plan; Free has a small quota). Needs connect.",
+    description: "Host the brand's own logo, wordmark SVG, illustrations, photos or web fonts on Quint AI Cloud and get a permanent link to use in pages, kits and brand_profile (every plan; Free has a small quota). Needs connect.",
     inputSchema: { file: external_exports.string().describe("A local file path or an https link"), name: external_exports.string().max(80).optional() },
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
   }, wrap(async (a) => {
@@ -44619,7 +44637,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
   }));
   server.registerTool("illustrate", {
     title: "On-brand illustrations",
-    description: `On-brand illustrations of real people in context, without Figma. action "generate" (Pro and above, connected): Quarter4 makes them itself (best model for the job, transparent background, quality-checked with one free automatic redo), saves them to the brand and returns links; draft: true makes cheap style previews first (a tenth of an image each). "regenerate": a new version of a scene the seller did not like (uses one image). When generation is not on the plan or is busy, generate returns the free prompts instead. action "styles": three style options to show the seller once. action "prompts" (default, free on every plan): ready prompts for each scene, built from the brand profile (palette locked to hex, flat background for a clean cut-out, avoid list, audience) - if you can generate images, generate one per prompt, check them against "acceptance", then call action "register" with the image links or files. "register": makes each image a transparent cut-out (on this computer, free), uploads it and saves it to the brand profile, so pages and kits use it frameless. If you cannot generate images, say so and offer the seller's own art (asset_upload) instead. Scenes for this niche are suggested; you can describe your own.`,
+    description: `On-brand illustrations of real people in context, without Figma. action "generate" (Pro and above, connected): Quint AI makes them itself (best model for the job, transparent background, quality-checked with one free automatic redo), saves them to the brand and returns links; draft: true makes cheap style previews first (a tenth of an image each). "regenerate": a new version of a scene the seller did not like (uses one image). When generation is not on the plan or is busy, generate returns the free prompts instead. action "styles": three style options to show the seller once. action "prompts" (default, free on every plan): ready prompts for each scene, built from the brand profile (palette locked to hex, flat background for a clean cut-out, avoid list, audience) - if you can generate images, generate one per prompt, check them against "acceptance", then call action "register" with the image links or files. "register": makes each image a transparent cut-out (on this computer, free), uploads it and saves it to the brand profile, so pages and kits use it frameless. If you cannot generate images, say so and offer the seller's own art (asset_upload) instead. Scenes for this niche are suggested; you can describe your own.`,
     inputSchema: {
       action: external_exports.enum(["styles", "prompts", "generate", "regenerate", "register"]).optional(),
       draft: external_exports.boolean().optional().describe("generate: cheap style previews (not saved to the brand)"),
@@ -44655,7 +44673,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
     if (action === "generate" || action === "regenerate") {
       const prompts = handoff2(spec, a.scenes, nicheId).slice(0, a.count ?? (action === "regenerate" ? 1 : 3));
       const freePrompts = (why) => json3({ generated: [], why, style: spec.style, prompts, acceptance: ACCEPTANCE, next: 'Generate these with your own image tool if you can, check them against acceptance, then call illustrate action "register". Otherwise offer the seller their own art (asset_upload).' });
-      if (!cloud.hasKey()) return freePrompts("Not connected to Quarter4 Cloud, so here are the prompts (free).");
+      if (!cloud.hasKey()) return freePrompts("Not connected to Quint AI Cloud, so here are the prompts (free).");
       const palette = Object.values(spec.palette ?? {}).filter((c) => /^#[0-9a-f]{3,8}$/i.test(String(c)));
       const quote = await cloud.genQuote({ [a.draft ? "drafts" : "images"]: prompts.length, purpose: a.purpose }).catch(() => null);
       if (quote && !quote.ok) return freePrompts(`${quote.why} Nothing was used.`);
@@ -44693,7 +44711,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
       let upBuf = buf, upType = type;
       if (allowFileWrites && /image\/(png|jpeg|webp)/.test(type)) {
         try {
-          const dir = resolve(tmpdir(), `q4-ill-${Date.now()}`);
+          const dir = resolve(tmpdir(), `quint-ill-${Date.now()}`);
           await mkdir(dir, { recursive: true });
           const src = resolve(dir, `in.${type.split("/")[1].replace("jpeg", "jpg")}`);
           await writeFile(src, buf);
@@ -44750,7 +44768,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
   }));
   server.registerTool("campaign_go", {
     title: "Whole campaign in one go",
-    description: 'Build a complete, on-brand campaign from one request: reads the brand (saved profile, or its website), understands the goal, asks only blocking questions, plans the content, lists the illustrations to generate, builds the landing page and the content kit (offer or content-only), checks everything, and returns private review links. Nothing is public until the seller approves; then publish the page with publish_page (role "campaign"). Write the headline, statement, promise and captions yourself when you can and pass them in; Quarter4 fills the rest plainly.',
+    description: 'Build a complete, on-brand campaign from one request: reads the brand (saved profile, or its website), understands the goal, asks only blocking questions, plans the content, lists the illustrations to generate, builds the landing page and the content kit (offer or content-only), checks everything, and returns private review links. Nothing is public until the seller approves; then publish the page with publish_page (role "campaign"). Write the headline, statement, promise and captions yourself when you can and pass them in; Quint AI fills the rest plainly.',
     inputSchema: {
       request: external_exports.string().min(3).describe("What the seller asked for, in their words"),
       brand: external_exports.string().min(1),
@@ -44839,7 +44857,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
       ...brandNote ? { brand: brandNote } : {},
       review: { page: pageLink, kit: kitRes.url ?? kitRes.file ?? null, private: true },
       plan: { totals: plan.totals, firstWeek: plan.slots.slice(0, 7).map((x) => ({ date: x.date, platform: x.platform, format: x.format, hook: x.hook })) },
-      ...prompts.length ? { illustrationsToMake: prompts, illustrationsNote: 'On Pro and above, call illustrate action "generate" (Quarter4 makes and saves them). Otherwise generate these with your own image tool if you can and register them with illustrate action "register". Then call campaign_go again: the page and kit will use them.' } : {},
+      ...prompts.length ? { illustrationsToMake: prompts, illustrationsNote: 'On Pro and above, call illustrate action "generate" (Quint AI makes and saves them). Otherwise generate these with your own image tool if you can and register them with illustrate action "register". Then call campaign_go again: the page and kit will use them.' } : {},
       checks: { page: pageChecks, kit: kitRes.checks },
       ...kitRes.askUser ? { askUser: kitRes.askUser } : {},
       steps,
@@ -44878,7 +44896,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
     if (a.pageId) await cloud.remove(a.pageId);
     return json3({ ok: true, removed: a.kitId ?? a.pageId });
   }));
-  server.registerPrompt("q4-campaign", {
+  server.registerPrompt("quint-campaign", {
     title: "Plan my campaign",
     description: "Campaign for the coming weeks: key dates, content plan, posts and a landing page.",
     argsSchema: { brand: external_exports.string(), niche: external_exports.string(), platforms: external_exports.string().describe("comma-separated"), region: external_exports.string().optional() }
@@ -44891,7 +44909,7 @@ Images: the seller's own photos are best (products[].image or images). If you ca
 5. Offer to build a landing page with landing_page and export the plan with export_plan.
 Keep every claim about prices, scarcity and deadlines true; flag anything that needs ad disclosure.` } }]
   }));
-  server.registerPrompt("q4-video-script", {
+  server.registerPrompt("quint-video-script", {
     title: "Short video script",
     description: "Short-form video script with hook, beats, shot list and captions for an event or sale.",
     argsSchema: { brand: external_exports.string(), product: external_exports.string(), event: external_exports.string().describe("event id, e.g. black-friday"), platform: external_exports.string() }
@@ -44960,7 +44978,7 @@ if (flag("--version")) {
       if (!res.headersSent) res.writeHead(500, { "content-type": "application/json" }).end(JSON.stringify({ jsonrpc: "2.0", error: { code: -32603, message: "Internal error" }, id: null }));
       console.error(e);
     }
-  }).listen(port, host, () => console.error(`quarter4 MCP ${VERSION} listening on http://${host}:${port}/mcp`));
+  }).listen(port, host, () => console.error(`quint-ai MCP ${VERSION} listening on http://${host}:${port}/mcp`));
 } else {
   const server = createServer2({ allowFileWrites: true });
   await server.connect(new StdioServerTransport());

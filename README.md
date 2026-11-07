@@ -1,10 +1,10 @@
-# Quarter4
+# Quint AI
 
-**A marketing engine for creators and sellers, all year round.** Tell your AI assistant what you sell in plain words ("i sell sneakers in lagos, need bf content for ig and whatsapp") and Quarter4 gives it what it needs to do the job properly: the dates that matter in your country, what people are searching today, a content plan that fits your product, posts and video scripts, free licensed photos, and a cinematic sales page built around your product.
+**A marketing engine for creators and sellers, all year round.** Tell your AI assistant what you sell in plain words ("i sell sneakers in lagos, need bf content for ig and whatsapp") and Quint AI gives it what it needs to do the job properly: the dates that matter in your country, what people are searching today, a content plan that fits your product, posts and video scripts, free licensed photos, and a cinematic sales page built around your product.
 
 Works with Claude (Code and Desktop), ChatGPT and Codex, or any MCP client.
 
-Docs and examples: https://phestplus.github.io/quarter4-mcp/ (mirror: https://q4.erasstack.com/docs/)
+Docs and examples: https://phestplus.github.io/quint-ai-mcp/ (mirror: https://quint.erasstack.com/docs/)
 
 ## What it does
 
@@ -35,7 +35,7 @@ Docs and examples: https://phestplus.github.io/quarter4-mcp/ (mirror: https://q4
 | `find_images` | Free, commercially usable photos with licence and attribution; filters logos. |
 | `landing_page` | Cinematic sales page from your product, photos, video or 3D model. |
 | `export_plan` | CSV (Sheets, Notion, Airtable), ICS (Google, Apple, Outlook calendar) or Markdown. |
-| `publish_page` | Puts the page online at `q4-<brand>.erasstack.com` and returns the link to share. |
+| `publish_page` | Puts the page online at `quint-<brand>.erasstack.com` and returns the link to share. |
 | `page_stats` | Views and WhatsApp order clicks per product. |
 | `connect_domain` | Pro: serve pages on your own domain with automatic HTTPS. |
 | `cloud_account` | Connect in one step (browser approval), plan status, dashboard link, and Flutterwave upgrade links. |
@@ -43,40 +43,40 @@ Docs and examples: https://phestplus.github.io/quarter4-mcp/ (mirror: https://q4
 | `brand_profile` | Save voice, products, order link, logo and colours once; kits and pages reuse them. |
 | `campaign_go` | The whole campaign in one go: brand, plan, illustrations to make, landing page, content kit, checks, private review links. |
 | `brand_extract` | Read a brand's own website: palette, fonts, wordmark, logo, positioning and copy samples, with evidence. |
-| `illustrate` | On-brand illustrations of people without Figma. Pro and above: Quarter4 generates them (quality-checked, transparent, saved to the brand). Every plan: style options and ready prompts for the AI's own image tool, then transparent cut-outs. |
+| `illustrate` | On-brand illustrations of people without Figma. Pro and above: Quint AI generates them (quality-checked, transparent, saved to the brand). Every plan: style options and ready prompts for the AI's own image tool, then transparent cut-outs. |
 | `video` | Short AI videos (4 or 8 seconds) animated from an approved illustration or photo (Studio and Business). |
 | `asset_upload` | Host the brand's logo, wordmark, illustrations and fonts (every plan). |
 | `kit_edit` | Change a shared kit at the same link: remove, reorder, replace or add posts. |
 | `unpublish` | Take a page or kit offline immediately. |
 | `report_issue` | File the seller's complaint ("off-brand", "wrong image") with context, so nobody writes a report. |
 
-Skills for Claude Code and Codex: `/quarter4:campaign` (does everything), `/quarter4:plan`, `/quarter4:posts`, `/quarter4:visuals`, `/quarter4:landing`, `/quarter4:trends`.
+Skills for Claude Code and Codex: `/quint-ai:campaign` (does everything), `/quint-ai:plan`, `/quint-ai:posts`, `/quint-ai:visuals`, `/quint-ai:landing`, `/quint-ai:trends`.
 
 ## Install
 
 ### Claude Code
 
 ```
-/plugin marketplace add phestplus/quarter4-mcp
-/plugin install quarter4@phestplus
+/plugin marketplace add phestplus/quint-ai-mcp
+/plugin install quint-ai@phestplus
 ```
 
-Then type `/quarter4:campaign` and describe your business.
+Then type `/quint-ai:campaign` and describe your business.
 
 ### Codex
 
 ```
-codex plugin marketplace add phestplus/quarter4-mcp
+codex plugin marketplace add phestplus/quint-ai-mcp
 ```
 
-Then install **Quarter4** from `/plugins`.
+Then install **Quint AI** from `/plugins`.
 
 ### Claude Desktop, Cursor, Windsurf, any MCP client
 
 ```json
 {
   "mcpServers": {
-    "quarter4": { "command": "npx", "args": ["-y", "quarter4-mcp"] }
+    "quint-ai": { "command": "npx", "args": ["-y", "quint-ai-mcp"] }
   }
 }
 ```
@@ -86,23 +86,23 @@ Then install **Quarter4** from `/plugins`.
 ChatGPT connects to MCP servers over HTTPS. Host the HTTP server on any Node host (Render, Railway, Fly.io, a VPS), then add it under Settings → Apps & Connectors → Developer mode → Create, with the URL `https://your-host/mcp`.
 
 ```
-npx -y quarter4-mcp --http --port 3000
+npx -y quint-ai-mcp --http --port 3000
 ```
 
 Health check: `GET /health`. In HTTP mode the server never writes files.
 
-## Publish and measure (Quarter4 Cloud)
+## Publish and measure (Quint AI Cloud)
 
-`publish_page` puts a page online in seconds and returns a link like `https://q4-korakicks.erasstack.com/black-friday`. `page_stats` shows views and WhatsApp order clicks per product.
+`publish_page` puts a page online in seconds and returns a link like `https://quint-korakicks.erasstack.com/black-friday`. `page_stats` shows views and WhatsApp order clicks per product.
 
-**Connect in one step.** Say "connect my Quarter4 account". Your assistant shows a link and a code; open the link, check the code matches, confirm your email and press Approve. The key is saved on your computer (`~/.quarter4/credentials.json`), so there is nothing to paste and no restart. New emails get a free account.
+**Connect in one step.** Say "connect my Quint AI account". Your assistant shows a link and a code; open the link, check the code matches, confirm your email and press Approve. The key is saved on your computer (`~/.quint-ai/credentials.json`), so there is nothing to paste and no restart. New emails get a free account.
 
-Your dashboard at https://q4.erasstack.com/dashboard shows views, WhatsApp taps per product, visitor countries and your plan. Sign in with your email; no password.
+Your dashboard at https://quint.erasstack.com/dashboard shows views, WhatsApp taps per product, visitor countries and your plan. Sign in with your email; no password.
 
 Prefer setting a key yourself (CI, hosted connectors)? Create one in the dashboard and add it to your MCP config:
 
 ```json
-"env": { "QUARTER4_API_KEY": "q4_..." }
+"env": { "QUINT_AI_API_KEY": "quint_..." }
 ```
 
 | Plan | Price | Includes |
@@ -111,7 +111,7 @@ Prefer setting a key yourself (CI, hosted connectors)? Create one in the dashboa
 | Pro | ₦9,900 a month in Nigeria, $9 elsewhere | Your own domain, no badge, 100 pages, 12-month analytics |
 | Business | ₦60,000 a month in Nigeria, $39 elsewhere | 10 brands, 10 custom domains |
 
-Payments are handled by Flutterwave's secure checkout. Pricing: https://q4.erasstack.com
+Payments are handled by Flutterwave's secure checkout. Pricing: https://quint.erasstack.com
 
 ## Better photos (optional, free)
 

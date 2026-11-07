@@ -2,7 +2,7 @@
 
 ## Unreleased (after 0.7.0)
 
-- **AI illustrations made by Quarter4 (`illustrate` action "generate", Pro and above):** the best model for each job (cheap drafts for style previews, a premium model for finals with a transparent background, a fallback model), a quality check on every final with one free automatic redo, saved to the brand so pages and kits use them. `regenerate` makes a new version a seller asks for. Free plans, and any time generation is unavailable, get the free prompts instead.
+- **AI illustrations made by Quint AI (`illustrate` action "generate", Pro and above):** the best model for each job (cheap drafts for style previews, a premium model for finals with a transparent background, a fallback model), a quality check on every final with one free automatic redo, saved to the brand so pages and kits use them. `regenerate` makes a new version a seller asks for. Free plans, and any time generation is unavailable, get the free prompts instead.
 - **AI video (`video`, Studio and Business):** 4 or 8-second clips animated from an approved illustration or photo; failed videos are refunded; kept 90 days.
 - **Credits (cloud):** generation stops at the content limit or credits, whichever comes first, and nobody is charged extra. Costs are fixed and can be quoted first. AI images and video can be switched off (video starts off); landing page images keep working but still use credits.
 - **Studio plan and top-ups (cloud):** Studio adds 60 images and 15 videos a month; one-off packs of 20 images or 5 videos. Allowances and a daily spending cap protect costs.
@@ -18,7 +18,7 @@
 - **Wordmark everywhere:** page navigation and a giant wordmark footer; centred offer blocks on every page style.
 - **Dashboard:** site map with role and status, and Unpublish buttons for pages and kits; issues page shows the first-pass check rate and how many issues the engine caught versus people.
 - **Regression suite:** every field-log issue is a stored case re-run on every test; `scripts/import-issues.mjs` turns the issues export into new cases.
-- **Questions:** Quarter4 blocks only when it cannot tell what is sold; a reasonable guess proceeds and says what it assumed.
+- **Questions:** Quint AI blocks only when it cannot tell what is sold; a reasonable guess proceeds and says what it assumed.
 
 ## 0.7.0 (2026-11-04)
 
@@ -30,7 +30,7 @@ Trust and control: no wrong content, nothing orphaned, problems caught before a 
 - **`unpublish`:** take a page or kit offline immediately.
 - **Page roles:** `publish_page` takes `role` (home, campaign, product, legal, review) and `endsAt`. Review pages are private, not indexed and don't use a page slot. The home page links live campaigns automatically; ended campaigns say so, then redirect home after 7 days. `cloud_account pages` returns a site map with role, status and reachability.
 - **Automatic checks (`checks` in every page and kit result):** leaked markup, double-escaped entities, empty values, retail wording for non-retail offers, placeholders, raw product text as headings, repeated brand names, prices or offer wording without an offer, avoided words, unrequested locations, palette not applied, UTC deadlines. `publish_page` refuses a failing page unless `force` is set. When connected, issues are filed automatically (arguments and the failing snippet only; `reportIssues: false` turns it off).
-- **`report_issue`, a feedback button and an issues page:** the AI files the seller's complaint in their words; each post on a hosted kit has a "Something's wrong" button; `q4.erasstack.com/dashboard/issues` groups reports by rule with counts, versions and examples (JSON export).
+- **`report_issue`, a feedback button and an issues page:** the AI files the seller's complaint in their words; each post on a hosted kit has a "Something's wrong" button; `quint.erasstack.com/dashboard/issues` groups reports by rule with counts, versions and examples (JSON export).
 - **Brand positioning:** `positioning` (is / isNot), `avoidWords`, `alwaysSay`, `noLocationMentions` in `brand_profile`, `landing_page` and `content_kit`; hooks that use an avoided word are never dealt.
 - **Wordmark:** `brandStyle.wordmark` (text, case, weight, letter spacing, accent letters, or an SVG) is used as written and never re-cased.
 - **Sentence case:** headlines are no longer forced into capitals.
@@ -51,11 +51,11 @@ Trust and control: no wrong content, nothing orphaned, problems caught before a 
 
 ## 0.5.0 (2026-11-03)
 
-Built from a real field test: Quarter4 now works from the brand's own information instead of fixed templates.
+Built from a real field test: Quint AI now works from the brand's own information instead of fixed templates.
 
 - **Brand look wins:** pages, kit graphics and the kit review page accept `brandStyle` (light or dark mode; palette: bg, surface, text, muted, accent, accent2; heading and body fonts). An event theme only adds its label. Text contrast is checked and corrected. A saved `brand_profile` fills it in automatically. Brand colours and fonts work on every plan; only the logo on graphics is Pro.
 - **The right verbs for what is sold:** `offerType` (physical, subscription, course, service, digital) drives calls to action, captions and hooks: "Start your plan" for apps, "Enrol" for courses, "Book" for services. Retail lines ("If it was in your cart", "Reply to this message to order") never reach non-physical offers.
-- **New niche:** consumer apps and subscriptions. When Quarter4 is not sure what is sold, it asks instead of guessing (`canProceed: false`).
+- **New niche:** consumer apps and subscriptions. When Quint AI is not sure what is sold, it asks instead of guessing (`canProceed: false`).
 - **Readable names:** `displayName` (or the brand) is used in copy; long raw product phrases are never pasted into hooks or headings. Eyebrows never repeat the brand.
 - **The AI's words win:** `posts[].hook` or `headline` replaces a kit post's default hook and the captions built on it.
 - **Kits live through the campaign:** hosted kits stay up until the offer deadline plus a day (up to 60 days).
@@ -88,9 +88,9 @@ Built from a real field test: Quarter4 now works from the brand's own informatio
 
 First version published to npm and GitHub Releases.
 
-- **Cloud tools:** `publish_page` (live link at `q4-<brand>.erasstack.com`), `page_stats` (views and WhatsApp order clicks per product), `connect_domain` (Pro, own domain with HTTPS), `cloud_account` (free key by email, plan status, Flutterwave upgrade links).
+- **Cloud tools:** `publish_page` (live link at `quint-<brand>.erasstack.com`), `page_stats` (views and WhatsApp order clicks per product), `connect_domain` (Pro, own domain with HTTPS), `cloud_account` (free key by email, plan status, Flutterwave upgrade links).
 - **Product grid** on sales pages: items with real and previous prices; on WhatsApp shops each item opens a prefilled order chat.
-- **Package:** ships as one self-contained file (`dist/server.mjs`) with no runtime dependencies, so `npx -y quarter4-mcp` starts fast.
+- **Package:** ships as one self-contained file (`dist/server.mjs`) with no runtime dependencies, so `npx -y quint-ai-mcp` starts fast.
 
 ## 0.2.0 (internal, not published to npm)
 
@@ -104,4 +104,4 @@ First version published to npm and GitHub Releases.
 
 ## 0.1.0 (internal, not published)
 
-- Q4 calendar, content plan, platform specs, asset briefs, holiday landing pages, CSV/ICS export.
+- Marketing calendar, content plan, platform specs, asset briefs, holiday landing pages, CSV/ICS export.

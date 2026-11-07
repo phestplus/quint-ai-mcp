@@ -1,7 +1,7 @@
 # Launch drafts
 
-Repo: https://github.com/phestplus/quarter4-mcp
-Site: https://phestplus.github.io/quarter4-mcp/
+Repo: https://github.com/phestplus/quint-ai-mcp
+Site: https://phestplus.github.io/quint-ai-mcp/
 
 ---
 
@@ -11,7 +11,7 @@ I built a marketing engine for AI assistants, and it is free.
 
 Most small businesses ask ChatGPT or Claude for "Black Friday content" and get generic captions, wrong dates and a plan that ignores where their customers actually live.
 
-Quarter4 fixes the parts AI guesses:
+Quint AI fixes the parts AI guesses:
 
 → Understands messy requests: "i sell sneakers in lagos, need bf content for ig and whatsapp, 25 percent off"
 → Knows the dates that matter in your country, all year: Ramadan and Eid, Mothering Sunday, Easter, back to school, Black Friday, Christmas, plus live public holidays for 100+ countries
@@ -31,7 +31,7 @@ Link in the first comment. If you sell anything online, try it on your next prom
 
 ## X (thread)
 
-1/ I built Quarter4: an MCP server that turns "i sell sneakers in lagos, need bf content for ig" into a full campaign. Free, open source. Works in Claude, ChatGPT, Codex.
+1/ I built Quint AI: an MCP server that turns "i sell sneakers in lagos, need bf content for ig" into a full campaign. Free, open source. Works in Claude, ChatGPT, Codex.
 
 2/ It knows the calendar for 100+ countries, all year. Easter is computed, Eid and Ramadan come with "±1 day, moon sighting" notes, and official public holidays are pulled live (it caught UK Boxing Day moving to Monday 28 Dec).
 
@@ -39,17 +39,17 @@ Link in the first comment. If you sell anything online, try it on your next prom
 
 4/ Sales pages are art-directed from the product: a 3D shoe that spins as you scroll, a split showcase for fashion, cinematic scenes for cars. Every item can be ordered on WhatsApp.
 
-5/ No fake reviews, no fake "was" prices, no countdowns that reset. Repo: https://github.com/phestplus/quarter4-mcp
+5/ No fake reviews, no fake "was" prices, no countdowns that reset. Repo: https://github.com/phestplus/quint-ai-mcp
 
 ---
 
 ## Hacker News
 
-**Title:** Show HN: Quarter4, an MCP server that gives AI assistants a real marketing calendar
+**Title:** Show HN: Quint AI, an MCP server that gives AI assistants a real marketing calendar
 
 **Text:**
 
-Quarter4 is an MCP server (plus Claude Code and Codex plugins) for small sellers who use AI for marketing. The problem it solves: assistants guess dates, ignore the seller's country, write generic content and produce landing pages that all look the same.
+Quint AI is an MCP server (plus Claude Code and Codex plugins) for small sellers who use AI for marketing. The problem it solves: assistants guess dates, ignore the seller's country, write generic content and produce landing pages that all look the same.
 
 What it does:
 

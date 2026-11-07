@@ -52,8 +52,20 @@ function score(phase, ev) {
   return IMPACT_RANK[ev.impact] * 10 + phaseWeight + (ev.relevance?.score ?? 0) / 10 + ev.leadDays / 1000;
 }
 
+// Suggested posting times in the audience's local time: a sensible start until a brand's own results say otherwise.
+const POST_TIMES = { instagram: ['12:30', '19:00'], tiktok: ['19:00', '21:00'], facebook: ['13:00', '19:30'], whatsapp: ['08:00', '18:30'], linkedin: ['08:30', '12:00'], x: ['09:00', '18:00'], youtube: ['17:00', '19:00'], email: ['10:00', '17:00'], telegram: ['09:00', '19:00'], pinterest: ['14:00', '20:00'] };
+const PHASE_TIME = { launch: 0, 'last-chance': 1 }; // a launch goes out early in the day; a last call goes out in the evening
+export function postTimeFor(platform, date, phase, custom = {}) {
+  if (/^([01]\d|2[0-3]):[0-5]\d$/.test(custom?.[platform] ?? '')) return custom[platform];
+  const t = POST_TIMES[platform] ?? ['10:00', '19:00'];
+  if (phase in PHASE_TIME) return t[PHASE_TIME[phase]];
+  const day = new Date(`${date}T00:00:00Z`).getUTCDay();
+  if (day === 0 || day === 6) return t[1]; // weekends: later in the day
+  return t[Number(date.slice(8)) % 2];
+}
+
 /**
- * Build a Q4 content plan. Accepts loose input: platforms as "ig, tik tok and whatsapp",
+ * Build a content plan. Accepts loose input: platforms as "ig, tik tok and whatsapp",
  * regions as cities or countries, niche as free text ("i sell sneakers in lagos").
  * @param {object} o
  * @param {string} o.brand
@@ -171,7 +183,7 @@ export function buildPlan(o) {
       }
       const f = p.formats[format];
       const isMotion = /reel|video|short|story|status/.test(format);
-      slots.push({ date: d, weekday: weekdayName(d), platform: platformId, format, size: f.size ?? null, aspect: f.aspect ?? null, ...slot,
+      slots.push({ date: d, time: postTimeFor(platformId, d, slot.phase, o.postTimes), weekday: weekdayName(d), platform: platformId, format, size: f.size ?? null, aspect: f.aspect ?? null, ...slot,
         ...(isMotion ? { shot: niche.shots[(slots.length + pi) % niche.shots.length] } : {}), status: 'idea' });
     });
   }
@@ -185,6 +197,7 @@ export function buildPlan(o) {
     niche: { id: nicheId, label: niche.label, kind: niche.kind },
     product, offer, offerType,
     interpreted: { platforms, regions, niche: niche.label, notes },
+    timesNote: 'Posting times are suggestions in your audience\'s local time. Change them to suit you, and let your results guide you.',
     ...(featured.length ? { featured } : {}),
     window: { start, end },
     postsPerWeekPerPlatform: perWeek,

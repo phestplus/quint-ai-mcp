@@ -89,7 +89,7 @@ export function buildKit(o) {
   // itself is the focal point, so the headline is not repeated: price and end date support it.
   const offerHead = (fallback, own) => (own ? `<h2 class="g-h">${esc(own)}</h2>` : typeLed && off ? '' : `<h2 class="g-h">${esc(offTxt ? cap(offTxt) : fallback)}</h2>`);
   const head = (h) => `${deco}<div class="g-top"><span class="g-brand">${o.logoUrl ? `<img src="${esc(img(o.logoUrl))}" alt="">` : wordmarkHtml(o)}</span>${event ? `<span class="g-ev">${esc(event)}</span>` : ''}</div>${h}`;
-  const wm = '<div class="q4wm">Made with Quarter4</div>';
+  const wm = '<div class="quintwm">Made with Quint AI</div>';
   const verbs = VERBS[offerType] ?? VERBS.physical;
   // Motif by category (relationships: joining lines; food: steam; fitness: motion lines...), stable per brand.
   const deco = motifFor(nicheId, o.brand, o.illustration?.motifs ?? o.motifs).svg;
@@ -319,9 +319,9 @@ ${MOTIF_CSS}
 .g.bleed::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 24%,rgba(0,0,0,0) 46%,rgba(0,0,0,.82) 100%)}
 .g.bleed .g-top,.g.bleed .g-bot{color:#fff}.g.bleed .g-pr s{color:rgba(255,255,255,.72)}.g.bleed .g-cta{color:rgba(255,255,255,.88)}
 .g.bleed .g-chip{background:rgba(255,255,255,.16);color:#fff}.g.bleed .g-feats li{border-color:rgba(255,255,255,.4);color:#fff}.g.bleed .deco{display:none}
-.g.bleed .rep-l{top:150px;left:72px;bottom:auto;z-index:2}.g.bleed .q4wm{color:#fff;z-index:3}
-.q4wm{display:none;position:absolute;right:28px;bottom:24px;font:600 22px/1 var(--b);color:var(--tx);opacity:.6}
-${o.watermark ? '.q4wm{display:block}' : ''}
+.g.bleed .rep-l{top:150px;left:72px;bottom:auto;z-index:2}.g.bleed .quintwm{color:#fff;z-index:3}
+.quintwm{display:none;position:absolute;right:28px;bottom:24px;font:600 22px/1 var(--b);color:var(--tx);opacity:.6}
+${o.watermark ? '.quintwm{display:block}' : ''}
 </style></head><body>
 <div class="bar"><div class="bar-in"><span class="mark" aria-hidden="true">${esc(o.brand.slice(0, 1).toUpperCase())}</span><b class="bar-b">${esc(o.brand)}</b><span class="bar-c" data-count>${posts.length} posts</span><button type="button" class="bar-dl" data-dlall>${UI.download}<span>Download all</span></button></div></div>
 <header class="top"><p class="eyebrow"><i></i>Content kit${THEMES[o.theme] && o.theme !== 'default' ? ` · ${esc(t.eyebrow)}` : ''}</p><h1>${posts.length} posts, ready to share</h1><p>Captions are written for each app. Edit anything, then share straight from your phone.${link ? ` Every post links to <a href="${esc(link)}">${esc(link.replace(/^https?:\/\//, ''))}</a>.` : ''}</p>
@@ -373,7 +373,7 @@ function files(card){return Promise.all(Array.prototype.map.call(card.querySelec
 function save(f){var a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
 function refresh(){document.querySelectorAll('.card').forEach(function(c){var st=c.querySelector('[data-st]');var r=c.querySelector('.ph.rep');c.classList.toggle('rep-card',!!r);if(st){var lab=r?'Ready, uses a representative photo':'Ready';st.title=lab;st.setAttribute('aria-label',lab)}});var cnt=document.querySelector('[data-count]');if(cnt)cnt.textContent=document.querySelectorAll('.card').length+' posts ready'}
 document.addEventListener('click',function(e){if(!e.target.closest('[data-dlall]'))return;var cards=[].slice.call(document.querySelectorAll('.card'));var b=e.target.closest('[data-dlall]');b.lastChild.textContent='Preparing...';cards.reduce(function(pr,c){return pr.then(function(){return files(c).then(function(fs){fs.forEach(save)})})},Promise.resolve()).then(function(){b.lastChild.textContent='Download all'},function(){b.lastChild.textContent='Try again'})});
-var KIT=window.Q4_KIT||null;
+var KIT=window.QUINT_KIT||null;
 function setPhoto(key,url,scope){(/^m/.test(key)?scope:document).querySelectorAll('.ph[data-p="'+key+'"]').forEach(function(ph){ph.classList.remove('need');ph.classList.remove('rep');var tag=ph.querySelector('.rep-l');if(tag)tag.remove();var im=ph.querySelector('img')||document.createElement('img');im.removeAttribute('crossorigin');im.src=url;im.alt='';if(!im.parentNode)ph.insertBefore(im,ph.firstChild)});refresh()}
 document.querySelectorAll('.card').forEach(function(card){
   card.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(){card.querySelectorAll('[data-tab]').forEach(function(x){x.setAttribute('aria-selected',String(x===b))});card.querySelectorAll('[data-cap]').forEach(function(t){t.hidden=t.getAttribute('data-cap')!==b.getAttribute('data-tab')});links()})});
@@ -386,7 +386,7 @@ document.querySelectorAll('.card').forEach(function(card){
 if(KIT&&KIT.photos)Object.keys(KIT.photos).forEach(function(k){setPhoto(k,KIT.photos[k],document)});
 document.querySelectorAll('.card').forEach(function(card){var f=card.querySelector('[data-flag]'),box=card.querySelector('[data-fb]');if(!f)return;if(!KIT){f.hidden=true;return}
   f.addEventListener('click',function(){box.hidden=!box.hidden});
-  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__q4/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quarter4 team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
+  box.querySelectorAll('[data-chip]').forEach(function(b){b.addEventListener('click',function(){fetch('/__quint/feedback/'+KIT.id,{method:'POST',body:JSON.stringify({post:card.getAttribute('data-post'),chip:b.getAttribute('data-chip')})}).then(function(){box.hidden=true;msg(card,'Thanks, the Quint AI team will look at this post.')},function(){msg(card,'Could not send. Try again.')})})})});
 document.querySelectorAll('.card').forEach(function(card){var pl=card.querySelector('[data-play]'),vd=card.querySelector('[data-video]');if(pl)pl.addEventListener('click',function(){preview(card)});if(vd)vd.addEventListener('click',function(){video(card)})});
 refresh();
 })();

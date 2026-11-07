@@ -1,4 +1,4 @@
-// Q4 events. Dates are computed per year from rules, so the calendar stays correct
+// October to December events. Dates are computed per year from rules, so the calendar stays correct
 // in future years. Lunar/lunisolar holidays use verified date tables.
 //
 // rule shapes:
@@ -17,7 +17,7 @@ export const REGIONS = ['global', 'US', 'UK', 'CA', 'AU', 'NG', 'IN', 'MX', 'CN'
 
 export const CATEGORIES = ['shopping', 'cultural', 'religious', 'awareness', 'seasonal', 'civic'];
 
-const Q4_EVENTS = [
+const END_OF_YEAR_EVENTS = [
   // October
   { id: 'ng-independence', name: 'Nigeria Independence Day', rule: { fixed: [10, 1] }, regions: ['NG'], category: 'civic', impact: 'medium', leadDays: 7,
     angles: ['national pride collections', 'green-white-green themed products', 'celebrate local makers'], hashtags: ['#NigeriaAt{ngAge}', '#IndependenceDay', '#MadeInNigeria'] },
@@ -92,4 +92,4 @@ const Q4_EVENTS = [
 ];
 
 // All events, January to December.
-export const EVENTS = [...YEAR_EVENTS, ...Q4_EVENTS];
+export const EVENTS = [...YEAR_EVENTS, ...END_OF_YEAR_EVENTS];

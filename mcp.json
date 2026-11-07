@@ -1,10 +1,10 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
-    "quarter4": {
+    "quint-ai": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "quarter4-mcp@0.7.0"]
+      "args": ["-y", "quint-ai-mcp@0.8.0"]
     }
   }
 }

@@ -4,7 +4,7 @@
 // and an attribution line. Photos that likely show third-party logos are flagged,
 // because using another brand's product photo on your sale page misleads buyers.
 
-const UA = 'quarter4-mcp (https://github.com/phestplus/quarter4-mcp)';
+const UA = 'quint-ai-mcp (https://github.com/phestplus/quint-ai-mcp)';
 
 // Brands whose logos or products commonly appear in stock photos.
 const TRADEMARKS = ['nike', 'adidas', 'converse', 'vans', 'puma', 'reebok', 'yeezy', 'jordan', 'new balance', 'asics', 'fila', 'gucci', 'louis vuitton', 'chanel', 'prada', 'dior', 'hermes', 'rolex', 'apple', 'iphone', 'macbook', 'samsung', 'sony', 'playstation', 'xbox', 'nintendo', 'toyota', 'mercedes', 'bmw', 'audi', 'ferrari', 'lamborghini', 'porsche', 'tesla', 'ford', 'honda', 'lexus', 'range rover', 'kia', 'chevrolet', 'corvette', 'hyundai', 'nissan', 'volkswagen', 'volvo', 'jaguar', 'bentley', 'rolls-royce', 'maserati', 'mazda', 'subaru', 'jeep', 'peugeot', 'renault', 'fiat', 'mclaren', 'bugatti', 'aston martin', 'coca-cola', 'pepsi', 'starbucks', 'mcdonald', 'ikea', 'zara', 'h&m', 'supreme', 'balenciaga', 'off-white', 'lego', 'disney', 'barbie', 'marvel'];
@@ -36,7 +36,7 @@ async function unsplash(q, { orientation, perPage }) {
   const j = await getJson(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=${perPage}${orientation ? `&orientation=${orientation}` : ''}&content_filter=high`, { authorization: `Client-ID ${key}` });
   return j.results.map((p) => ({
     provider: 'unsplash', url: `${p.urls.raw}&w=2000&q=80&auto=format&fit=crop`, full: p.urls.full, thumb: p.urls.small, width: p.width, height: p.height,
-    alt: p.alt_description || q, author: p.user.name, authorUrl: `${p.user.links.html}?utm_source=quarter4&utm_medium=referral`, page: p.links.html,
+    alt: p.alt_description || q, author: p.user.name, authorUrl: `${p.user.links.html}?utm_source=quint-ai&utm_medium=referral`, page: p.links.html,
     license: 'Unsplash License', licenseUrl: 'https://unsplash.com/license', attribution: `Photo by ${p.user.name} on Unsplash`, attributionRequired: false,
     color: p.color, downloadLocation: p.links.download_location,
   }));
@@ -122,7 +122,7 @@ export async function findImages(query, o = {}) {
   return {
     images: images.slice(0, count),
     ...(dropped ? { droppedAsUnrelated: dropped } : {}),
-    ...(images.length ? {} : { nothingFits: `Nothing found matches "${query}"${terms.length ? ` (looked for: ${terms.join(', ')})` : ''}. Try simpler words, use the seller's own photos, or connect Quarter4 Cloud for studio photo search.` }),
+    ...(images.length ? {} : { nothingFits: `Nothing found matches "${query}"${terms.length ? ` (looked for: ${terms.join(', ')})` : ''}. Try simpler words, use the seller's own photos, or connect Quint AI Cloud for studio photo search.` }),
     providersTried, errors,
     note: [
       premium ? null : 'Tip: set PEXELS_API_KEY or UNSPLASH_ACCESS_KEY (both free) for studio-quality photos. Keyless sources are mixed quality.',
@@ -181,7 +181,7 @@ export async function matchingImages({ nicheId, product = '', attributes = '', m
   // Very specific searches can come back empty: retry once with just the product type.
   const broad = [product || words[0], mood].filter(Boolean).join(' ').trim();
   if (!ranked.length && broad && broad !== query) return matchingImages({ nicheId, product, attributes: '', mood: '', orientation, count, search, productShot, mustMatch });
-  return { query, images: ranked.slice(0, count), providersTried: r.providersTried ?? ['quarter4-cloud'], words };
+  return { query, images: ranked.slice(0, count), providersTried: r.providersTried ?? ['quint-ai-cloud'], words };
 }
 
 /** Product-type words implied by a product name, e.g. "Street Slide" needs a slide or sandal. */

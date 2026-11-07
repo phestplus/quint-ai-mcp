@@ -2,7 +2,7 @@
 // positioning hints, copy samples for the AI to judge voice). Nothing is guessed from outside the site;
 // every value carries the evidence it came from, and the seller confirms before it is saved.
 
-const UA = 'quarter4-mcp brand reader (+https://github.com/phestplus/quarter4-mcp)';
+const UA = 'quint-ai-mcp brand reader (+https://github.com/phestplus/quint-ai-mcp)';
 const HEX6 = /#([0-9a-f]{6}|[0-9a-f]{3})\b/gi;
 
 async function get(url, ms = 12000, max = 600_000) {
@@ -80,7 +80,7 @@ export function analyse(html, css = '', baseUrl = 'https://example.com/') {
   const markText = decode(logoImg ? attr(logoImg, 'alt') ?? '' : '') || name;
   const wordmark = name ? { text: markText || name, case: markText && markText === markText.toLowerCase() && /[a-z]/.test(markText) ? 'lower' : markText && markText === markText.toUpperCase() && /[A-Z]/.test(markText) ? 'upper' : 'as-is' } : null;
 
-  // Copy samples for the AI to read the voice (Quarter4 does not label voice itself).
+  // Copy samples for the AI to read the voice (Quint AI does not label voice itself).
   const h1 = textOf(/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(html)?.[1] ?? '');
   const h2s = [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)].map((m) => textOf(m[1])).filter(Boolean).slice(0, 4);
   const paras = [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => textOf(m[1])).filter((t) => t.length > 40).slice(0, 4);

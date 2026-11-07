@@ -59,9 +59,9 @@ test('ICS is valid-looking and folds long lines', () => {
 
 test('markdown export includes key dates and table', () => {
   const md = toMarkdown(buildPlan(base));
-  assert.match(md, /# Q4 content plan: Glow Lab/);
+  assert.match(md, /# Content plan: Glow Lab/);
   assert.match(md, /\*\*Black Friday\*\*: 2026-11-27/);
-  assert.match(md, /\| Date \| Day \|/);
+  assert.match(md, /\| Date \| Time \| Day \|/);
 });
 
 test('hooks do not repeat within a plan, and never invent a discount', () => {

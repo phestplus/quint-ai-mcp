@@ -183,3 +183,16 @@ test('brand_extract reads palette, fonts, wordmark and logo from the brand\'s ow
   assert.equal(r.samples.h1, 'Small habits, kept all year.');
   assert.ok(r.evidence.length >= 2);
 });
+
+test('every planned post has a posting time, the seller can set their own, and calendars keep it', async () => {
+  const { toICS } = await import('../src/export.js');
+  const p = buildPlan({ brand: 'Kora', niche: 'sneakers', platforms: 'ig, whatsapp, email', regions: 'Lagos', startDate: '2026-11-16', endDate: '2026-11-29' });
+  assert.ok(p.slots.length > 0);
+  for (const s of p.slots) assert.match(s.time, /^\d{2}:\d{2}$/, `${s.platform} ${s.date}`);
+  assert.match(p.timesNote, /suggestions/);
+  const mine = buildPlan({ brand: 'Kora', niche: 'sneakers', platforms: 'ig', regions: 'Lagos', startDate: '2026-11-16', endDate: '2026-11-29', postTimes: { instagram: '18:15' } });
+  assert.ok(mine.slots.every((s) => s.time === '18:15'));
+  const ics = toICS(p.slots);
+  assert.match(ics, /DTSTART:\d{8}T\d{6}/);
+  assert.ok(!/VALUE=DATE/.test(ics), 'calendar entries are at a time, not all day');
+});

@@ -7,7 +7,7 @@
 import { addDays, diffDays, today, weekdayName } from './dates.js';
 import { country } from './geo.js';
 
-const UA = 'quarter4-mcp (https://github.com/phestplus/quarter4-mcp)';
+const UA = 'quint-ai-mcp (https://github.com/phestplus/quint-ai-mcp)';
 const cache = new Map();
 
 async function cached(key, ttlMs, fn) {
@@ -75,7 +75,7 @@ function rssItems(xml) {
 /** Today's top searches in a country (Google Trends daily RSS). */
 export async function trends(iso) {
   return cached(`tr:${iso}`, 30 * 60e3, async () => {
-    const xml = await get(`https://trends.google.com/trending/rss?geo=${iso}`, { type: 'text', ua: 'Mozilla/5.0 (compatible; quarter4-mcp)' });
+    const xml = await get(`https://trends.google.com/trending/rss?geo=${iso}`, { type: 'text', ua: 'Mozilla/5.0 (compatible; quint-ai-mcp)' });
     return rssItems(xml).map((t) => {
       const text = `${t.topic} ${t.news.map((n) => n.title).join(' ')}`;
       return { ...t, country: iso, sensitive: SENSITIVE.test(text) };

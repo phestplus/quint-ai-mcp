@@ -1,6 +1,6 @@
 import { addDays } from './dates.js';
 
-const COLUMNS = ['date', 'weekday', 'platform', 'format', 'size', 'kind', 'event', 'phase', 'objective', 'angle', 'cta', 'hashtags', 'caution', 'status'];
+const COLUMNS = ['date', 'time', 'weekday', 'platform', 'format', 'size', 'kind', 'event', 'phase', 'objective', 'angle', 'cta', 'hashtags', 'caution', 'status'];
 
 function csvCell(v) {
   if (v == null) return '';
@@ -33,24 +33,27 @@ function fold(line) {
   return parts.join('\r\n ');
 }
 
-export function toICS(slots, calName = 'Q4 content plan') {
+// Thirty minutes to post. No time zone on purpose: it shows at that clock time wherever the seller is.
+const endOf = (t) => { const [h, m] = t.split(':').map(Number); const e = Math.min(h * 60 + m + 30, 23 * 60 + 59); return `${String(Math.floor(e / 60)).padStart(2, '0')}${String(e % 60).padStart(2, '0')}`; };
+
+export function toICS(slots, calName = 'Content plan') {
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//quarter4//content plan//EN', 'CALSCALE:GREGORIAN', `X-WR-CALNAME:${icsText(calName)}`];
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//quint-ai//content plan//EN', 'CALSCALE:GREGORIAN', `X-WR-CALNAME:${icsText(calName)}`];
   slots.forEach((s, i) => {
     const d = s.date.replace(/-/g, '');
     const next = addDays(s.date, 1).replace(/-/g, '');
     const title = `${s.platform} ${s.format}: ${s.event ?? s.phase}${s.event ? ` (${s.phase})` : ''}`;
     const desc = [`Objective: ${s.objective}`, `Angle: ${s.angle}`, `CTA: ${s.cta}`, s.size ? `Size: ${s.size} (${s.aspect})` : '', s.hashtags?.length ? `Hashtags: ${s.hashtags.join(' ')}` : '', s.caution ? `Caution: ${s.caution}` : ''].filter(Boolean).join('\n');
-    lines.push('BEGIN:VEVENT', `UID:${d}-${i}-${s.platform}@quarter4`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${next}`, `SUMMARY:${icsText(title)}`, `DESCRIPTION:${icsText(desc)}`, 'TRANSP:TRANSPARENT', 'END:VEVENT');
+    lines.push('BEGIN:VEVENT', `UID:${d}-${i}-${s.platform}@quint-ai`, `DTSTAMP:${stamp}`, ...(s.time ? [`DTSTART:${d}T${s.time.replace(':', '')}00`, `DTEND:${d}T${endOf(s.time)}00`] : [`DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${next}`]), `SUMMARY:${icsText(title)}`, `DESCRIPTION:${icsText(desc)}`, 'TRANSP:TRANSPARENT', 'END:VEVENT');
   });
   lines.push('END:VCALENDAR');
   return lines.map(fold).join('\r\n') + '\r\n';
 }
 
 export function toMarkdown(plan) {
-  const rows = plan.slots.map((s) => `| ${s.date} | ${s.weekday.slice(0, 3)} | ${s.platform} | ${s.format} | ${s.event ?? '-'} | ${s.phase} | ${String(s.angle).replace(/\|/g, '/')} | ${s.cta} |`);
+  const rows = plan.slots.map((s) => `| ${s.date} | ${s.time ?? '-'} | ${s.weekday.slice(0, 3)} | ${s.platform} | ${s.format} | ${s.event ?? '-'} | ${s.phase} | ${String(s.angle).replace(/\|/g, '/')} | ${s.cta} |`);
   return [
-    `# Q4 content plan: ${plan.brand}`,
+    `# Content plan: ${plan.brand}`,
     '',
     `${plan.window.start} → ${plan.window.end} · ${plan.platforms.join(', ')} · ${plan.postsPerWeekPerPlatform} posts/week/platform`,
     '',
@@ -59,8 +62,8 @@ export function toMarkdown(plan) {
     ...(plan.observances.length ? ['', '## Observances (no sales tie-ins)', ...plan.observances.map((e) => `- ${e.name}: ${e.date}`)] : []),
     '',
     '## Calendar',
-    '| Date | Day | Platform | Format | Event | Phase | Angle | CTA |',
-    '|---|---|---|---|---|---|---|---|',
+    '| Date | Time | Day | Platform | Format | Event | Phase | Angle | CTA |',
+    '|---|---|---|---|---|---|---|---|---|',
     ...rows,
     '',
   ].join('\n');

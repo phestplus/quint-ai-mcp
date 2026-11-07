@@ -1,4 +1,4 @@
-// q4_start: the context engine. Takes whatever the user typed ("i sell sneakers in
+// quint_start: the context engine. Takes whatever the user typed ("i sell sneakers in
 // lagos, need bf content for ig and whatsapp, 30 percent off") and returns what we
 // understood, what we assumed, the few questions that truly block progress, the
 // events that matter for this audience, what to post today, and prefilled next calls.
@@ -55,7 +55,7 @@ export function startCampaign(o) {
   const cls = classifyNiche(`${o.description ?? ''} ${o.product ?? ''}`);
   const niche = NICHES[cls.id];
   const product = o.product || cls.matched[0] || null;
-  // Blocks only when Quarter4 cannot tell at all; a reasonable guess proceeds and says what it assumed.
+  // Blocks only when Quint AI cannot tell at all; a reasonable guess proceeds and says what it assumed.
   if (cls.confidence !== 'high') questions.push({ field: 'product', question: `What exactly do you sell, and how do people buy it? (a product they order, an app or subscription, a course, a booked service)`, blocking: cls.confidence === 'low', defaultUsed: `${NICHES[cls.id]?.label ?? 'general'} (a guess; the plan, posts and page depend on this)` });
 
   // Platforms

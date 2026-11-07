@@ -17,7 +17,7 @@ test('lists all tools and prompts', async () => {
   const tools = (await client.listTools()).tools.map((t) => t.name).sort();
   assert.deepEqual(tools, ['asset_brief', 'asset_upload', 'brand_extract', 'brand_profile', 'campaign_go', 'cloud_account', 'connect_domain', 'content_kit', 'content_plan', 'event_calendar', 'export_plan', 'find_images', 'illustrate', 'kit_edit', 'landing_page', 'page_stats', 'platform_specs', 'publish_page', 'report_issue', 'start_campaign', 'studio_photo', 'unpublish', 'video', 'whats_on']);
   const prompts = (await client.listPrompts()).prompts.map((p) => p.name).sort();
-  assert.deepEqual(prompts, ['q4-campaign', 'q4-video-script']);
+  assert.deepEqual(prompts, ['quint-campaign', 'quint-video-script']);
   await close();
 });
 
@@ -82,7 +82,7 @@ test('studio_photo enhances a local photo (background removal when rembg is pres
   const { tmpdir } = await import('node:os');
   const { join } = await import('node:path');
   const { execFileSync } = await import('node:child_process');
-  const dir = mkdtempSync(join(tmpdir(), 'q4studio-'));
+  const dir = mkdtempSync(join(tmpdir(), 'quintstudio-'));
   const src = join(dir, 'shoe.png');
   try {
     execFileSync(process.platform === 'win32' ? 'python' : 'python3', ['-c', `from PIL import Image, ImageDraw\nim=Image.new('RGB',(800,600),(180,170,150))\nd=ImageDraw.Draw(im)\nd.ellipse((200,250,600,420),fill=(240,240,240))\nim.save(r'${src}')`]);
