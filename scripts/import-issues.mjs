@@ -1,4 +1,4 @@
-// Turn the dashboard's issues export (quintai.erasstack.com/dashboard/issues.json) into regression cases.
+// Turn the dashboard's issues export (quint.erasstack.com/dashboard/issues.json) into regression cases.
 // Usage: node scripts/import-issues.mjs issues.json   -> writes test/regression/imported-<date>.json
 import { readFileSync, writeFileSync } from 'node:fs';
 const { issues = [] } = JSON.parse(readFileSync(process.argv[2], 'utf8'));

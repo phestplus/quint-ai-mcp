@@ -5,7 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync, chmodSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
-const base = () => (process.env.QUINT_AI_API_URL || 'https://quintai.erasstack.com').replace(/\/+$/, '');
+const base = () => (process.env.QUINT_AI_API_URL || 'https://quint.erasstack.com').replace(/\/+$/, '');
 const credFile = () => join(process.env.QUINT_AI_HOME || join(homedir(), '.quint-ai'), 'credentials.json');
 
 export const NO_KEY = 'Not connected to Quint AI Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';

@@ -14,13 +14,13 @@ const skip = !existsSync(workerPath) && 'quint-ai-cloud not present';
 test('publish, measure and upgrade through MCP tools', { skip, timeout: 30000 }, async () => {
   const { default: worker } = await import(workerPath.href);
   const { MemoryStore, MemoryBucket } = await import(new URL('../../quint-ai-cloud/src/store.ts', import.meta.url).href);
-  const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quintai.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quintai-', KEY_PEPPER: 'p', FLW_SECRET_KEY: 'k', FLW_PLAN_PRO_NGN: '1' };
+  const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quint.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quint-', KEY_PEPPER: 'p', FLW_SECRET_KEY: 'k', FLW_PLAN_PRO_NGN: '1' };
 
   // Local HTTP server that routes by Host header, like Cloudflare would.
   const realFetch = globalThis.fetch;
   const http = createHttp(async (req, res) => {
     const chunks = []; for await (const c of req) chunks.push(c);
-    const host = req.headers['x-host'] ?? 'quintai.erasstack.com';
+    const host = req.headers['x-host'] ?? 'quint.erasstack.com';
     const r = await worker.fetch(new Request(`https://${host}${req.url}`, { method: req.method, headers: req.headers, body: chunks.length ? Buffer.concat(chunks) : undefined }), env, { waitUntil() {} });
     res.writeHead(r.status, Object.fromEntries(r.headers)); res.end(Buffer.from(await r.arrayBuffer()));
   });
@@ -52,19 +52,19 @@ test('publish, measure and upgrade through MCP tools', { skip, timeout: 30000 },
 
     const p = await call('publish_page', { brand: 'Kora Kicks', path: 'black-friday', page: { product: 'sneakers', discountPercent: 25, ctaUrl: 'https://wa.me/2348031234567', products: [{ name: 'Runner One', price: '₦63,000' }], autoImages: false } });
     assert.ok(!p.err, p.text);
-    assert.equal(p.data.url, 'https://quintai-korakicks.erasstack.com/black-friday');
+    assert.equal(p.data.url, 'https://quint-korakicks.erasstack.com/black-friday');
 
     // A visitor taps "Order on WhatsApp" for Runner One.
-    await realFetch(`${base}/__quint/e`, { method: 'POST', headers: { 'x-host': 'quintai-korakicks.erasstack.com' }, body: JSON.stringify({ t: 'whatsapp', l: 'Runner One', p: '/black-friday' }) });
+    await realFetch(`${base}/__quint/e`, { method: 'POST', headers: { 'x-host': 'quint-korakicks.erasstack.com' }, body: JSON.stringify({ t: 'whatsapp', l: 'Runner One', p: '/black-friday' }) });
     const ask = await call('content_kit', { brand: 'Kora Kicks', product: 'sneakers', discountPercent: 30, ctaUrl: 'https://wa.me/2348031234567', products: [{ name: 'Court Low', price: '₦56,000' }], autoImages: false });
     assert.equal(ask.data.needsAnswer, true, 'asks about photos before making anything');
     assert.match(ask.data.askUser[0].question, /Court Low/);
     const kit = await call('content_kit', { brand: 'Kora Kicks', product: 'sneakers', theme: 'black-friday', discountPercent: 30, price: '₦63,000', originalPrice: '₦90,000', products: [{ name: 'Runner One', price: '₦63,000', image: 'https://images.pexels.com/photos/1/a.jpeg' }, { name: 'Court Low', price: '₦56,000' }], autoImages: false, productPhotos: 'none' });
     assert.ok(!kit.err, kit.text);
-    assert.match(kit.data.url, /^https:\/\/quintai-korakicks.erasstack\.com\/k\/[a-f0-9]{12}$/);
+    assert.match(kit.data.url, /^https:\/\/quint-korakicks.erasstack\.com\/k\/[a-f0-9]{12}$/);
     assert.ok(kit.data.posts.length >= 6);
     assert.equal(new Set(kit.data.posts.map((p) => p.hook)).size, kit.data.posts.length, 'each post opens differently');
-    const kitPage = await (await realFetch(`${base}/k/${kit.data.url.split('/k/')[1]}`, { headers: { 'x-host': 'quintai-korakicks.erasstack.com' } })).text();
+    const kitPage = await (await realFetch(`${base}/k/${kit.data.url.split('/k/')[1]}`, { headers: { 'x-host': 'quint-korakicks.erasstack.com' } })).text();
     assert.match(kitPage, /\/__quint\/img\/[a-f0-9]{12}\/0/, 'photos go through the kit relay');
     assert.match(kitPage, /data-share/);
 
@@ -90,7 +90,7 @@ test('publish, measure and upgrade through MCP tools', { skip, timeout: 30000 },
     assert.ok(ed.data.checks && typeof ed.data.checks.passed === 'boolean', 'checks run on every kit');
     const off = await call('unpublish', { kitId: kit.data.kitId });
     assert.ok(!off.err, off.text);
-    assert.equal((await realFetch(`${base}/k/${kit.data.kitId}`, { headers: { 'x-host': 'quintai-korakicks.erasstack.com' } })).status, 410);
+    assert.equal((await realFetch(`${base}/k/${kit.data.kitId}`, { headers: { 'x-host': 'quint-korakicks.erasstack.com' } })).status, 410);
     // One go: content-only week with the AI's own copy -> private review page + kit + plan + illustration prompts.
     const go = await call('campaign_go', { request: 'this week of everyday content for our sneaker shop in Lagos, instagram and whatsapp', brand: 'Kora Kicks', offer: 'none', ctaUrl: 'https://wa.me/2348031234567',
       copy: { headline: 'Fresh pairs, every week.', statement: 'Two feet, one good day.', steps: [{ title: 'Pick a pair' }, { title: 'Message us' }, { title: 'Wear it out' }] } });
@@ -100,7 +100,7 @@ test('publish, measure and upgrade through MCP tools', { skip, timeout: 30000 },
     assert.ok(go.data.plan.totals.slots > 0);
     assert.ok(go.data.illustrationsToMake.length >= 1, 'illustration prompts for the host AI');
     assert.equal(go.data.checks.page.passed, true, JSON.stringify(go.data.checks.page.issues));
-    const reviewPage = await realFetch(go.data.review.page.replace('https://quintai-korakicks.erasstack.com', base), { headers: { 'x-host': 'quintai-korakicks.erasstack.com' } });
+    const reviewPage = await realFetch(go.data.review.page.replace('https://quint-korakicks.erasstack.com', base), { headers: { 'x-host': 'quint-korakicks.erasstack.com' } });
     assert.equal(reviewPage.headers.get('x-robots-tag'), 'noindex, nofollow');
     assert.ok(!k2.data.notes.some((n) => /part of Pro/.test(n)), 'brand colours are not paywalled (only the logo is Pro)');
     assert.equal(st.data.pages[0].byItem['Runner One'], 1);
@@ -123,10 +123,10 @@ test('connect: browser approval saves the key locally, then publishing works', {
   const { mkdtempSync, readFileSync } = await import('node:fs');
   const { tmpdir } = await import('node:os');
   const { join } = await import('node:path');
-  const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quintai.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quintai-', KEY_PEPPER: 'p' };
+  const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quint.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quint-', KEY_PEPPER: 'p' };
   const http = createHttp(async (req, res) => {
     const chunks = []; for await (const c of req) chunks.push(c);
-    const r = await worker.fetch(new Request(`https://quintai.erasstack.com${req.url}`, { method: req.method, headers: req.headers, body: chunks.length ? Buffer.concat(chunks) : undefined }), env, { waitUntil() {} });
+    const r = await worker.fetch(new Request(`https://quint.erasstack.com${req.url}`, { method: req.method, headers: req.headers, body: chunks.length ? Buffer.concat(chunks) : undefined }), env, { waitUntil() {} });
     res.writeHead(r.status, Object.fromEntries(r.headers)); res.end(Buffer.from(await r.arrayBuffer()));
   });
   await new Promise((r) => http.listen(0, '127.0.0.1', r));
@@ -185,11 +185,11 @@ test('connect: browser approval saves the key locally, then publishing works', {
 test('AI generation through MCP: Free gets the free prompts, Pro generates and saves, video needs Studio', { skip, timeout: 30000 }, async () => {
   const { default: worker } = await import(workerPath.href);
   const { MemoryStore, MemoryBucket } = await import(new URL('../../quint-ai-cloud/src/store.ts', import.meta.url).href);
-  const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quintai.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quintai-', KEY_PEPPER: 'p', OPENROUTER_API_KEY: 'or-test' };
+  const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quint.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quint-', KEY_PEPPER: 'p', OPENROUTER_API_KEY: 'or-test' };
   const realFetch = globalThis.fetch;
   const http = createHttp(async (req, res) => {
     const chunks = []; for await (const c of req) chunks.push(c);
-    const r = await worker.fetch(new Request(`https://quintai.erasstack.com${req.url}`, { method: req.method, headers: req.headers, body: chunks.length ? Buffer.concat(chunks) : undefined }), env, { waitUntil() {} });
+    const r = await worker.fetch(new Request(`https://quint.erasstack.com${req.url}`, { method: req.method, headers: req.headers, body: chunks.length ? Buffer.concat(chunks) : undefined }), env, { waitUntil() {} });
     res.writeHead(r.status, Object.fromEntries(r.headers)); res.end(Buffer.from(await r.arrayBuffer()));
   });
   await new Promise((r) => http.listen(0, '127.0.0.1', r));

@@ -30,7 +30,7 @@ Trust and control: no wrong content, nothing orphaned, problems caught before a 
 - **`unpublish`:** take a page or kit offline immediately.
 - **Page roles:** `publish_page` takes `role` (home, campaign, product, legal, review) and `endsAt`. Review pages are private, not indexed and don't use a page slot. The home page links live campaigns automatically; ended campaigns say so, then redirect home after 7 days. `cloud_account pages` returns a site map with role, status and reachability.
 - **Automatic checks (`checks` in every page and kit result):** leaked markup, double-escaped entities, empty values, retail wording for non-retail offers, placeholders, raw product text as headings, repeated brand names, prices or offer wording without an offer, avoided words, unrequested locations, palette not applied, UTC deadlines. `publish_page` refuses a failing page unless `force` is set. When connected, issues are filed automatically (arguments and the failing snippet only; `reportIssues: false` turns it off).
-- **`report_issue`, a feedback button and an issues page:** the AI files the seller's complaint in their words; each post on a hosted kit has a "Something's wrong" button; `quintai.erasstack.com/dashboard/issues` groups reports by rule with counts, versions and examples (JSON export).
+- **`report_issue`, a feedback button and an issues page:** the AI files the seller's complaint in their words; each post on a hosted kit has a "Something's wrong" button; `quint.erasstack.com/dashboard/issues` groups reports by rule with counts, versions and examples (JSON export).
 - **Brand positioning:** `positioning` (is / isNot), `avoidWords`, `alwaysSay`, `noLocationMentions` in `brand_profile`, `landing_page` and `content_kit`; hooks that use an avoided word are never dealt.
 - **Wordmark:** `brandStyle.wordmark` (text, case, weight, letter spacing, accent letters, or an SVG) is used as written and never re-cased.
 - **Sentence case:** headlines are no longer forced into capitals.
@@ -88,7 +88,7 @@ Built from a real field test: Quint AI now works from the brand's own informatio
 
 First version published to npm and GitHub Releases.
 
-- **Cloud tools:** `publish_page` (live link at `quintai-<brand>.erasstack.com`), `page_stats` (views and WhatsApp order clicks per product), `connect_domain` (Pro, own domain with HTTPS), `cloud_account` (free key by email, plan status, Flutterwave upgrade links).
+- **Cloud tools:** `publish_page` (live link at `quint-<brand>.erasstack.com`), `page_stats` (views and WhatsApp order clicks per product), `connect_domain` (Pro, own domain with HTTPS), `cloud_account` (free key by email, plan status, Flutterwave upgrade links).
 - **Product grid** on sales pages: items with real and previous prices; on WhatsApp shops each item opens a prefilled order chat.
 - **Package:** ships as one self-contained file (`dist/server.mjs`) with no runtime dependencies, so `npx -y quint-ai-mcp` starts fast.
 
