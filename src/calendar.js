@@ -4,7 +4,7 @@ import { YEAR_GLOBAL_REACH } from './events-year.js';
 
 const byId = new Map(EVENTS.map((e) => [e.id, e]));
 
-// Resolve an event's start date for the Q4 season of `year`. Returns null when unknown.
+// Resolve an event's start date for the season of `year`. Returns null when unknown.
 export function resolveDate(event, year) {
   const y = event.nextYear ? year + 1 : year;
   const r = event.rule;
@@ -59,7 +59,7 @@ function materialize(event, year, ref) {
 const IMPACT_RANK = { high: 3, medium: 2, low: 1 };
 
 /**
- * List Q4 events.
+ * List events.
  * @param {object} o
  * @param {number} [o.year] season year (default: year of `from` or today)
  * @param {string} [o.from] YYYY-MM-DD inclusive (default: Oct 1)

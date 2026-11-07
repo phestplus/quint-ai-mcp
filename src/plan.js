@@ -65,7 +65,7 @@ export function postTimeFor(platform, date, phase, custom = {}) {
 }
 
 /**
- * Build a Q4 content plan. Accepts loose input: platforms as "ig, tik tok and whatsapp",
+ * Build a content plan. Accepts loose input: platforms as "ig, tik tok and whatsapp",
  * regions as cities or countries, niche as free text ("i sell sneakers in lagos").
  * @param {object} o
  * @param {string} o.brand

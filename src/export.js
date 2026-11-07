@@ -36,7 +36,7 @@ function fold(line) {
 // Thirty minutes to post. No time zone on purpose: it shows at that clock time wherever the seller is.
 const endOf = (t) => { const [h, m] = t.split(':').map(Number); const e = Math.min(h * 60 + m + 30, 23 * 60 + 59); return `${String(Math.floor(e / 60)).padStart(2, '0')}${String(e % 60).padStart(2, '0')}`; };
 
-export function toICS(slots, calName = 'Q4 content plan') {
+export function toICS(slots, calName = 'Content plan') {
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//quint-ai//content plan//EN', 'CALSCALE:GREGORIAN', `X-WR-CALNAME:${icsText(calName)}`];
   slots.forEach((s, i) => {
@@ -53,7 +53,7 @@ export function toICS(slots, calName = 'Q4 content plan') {
 export function toMarkdown(plan) {
   const rows = plan.slots.map((s) => `| ${s.date} | ${s.time ?? '-'} | ${s.weekday.slice(0, 3)} | ${s.platform} | ${s.format} | ${s.event ?? '-'} | ${s.phase} | ${String(s.angle).replace(/\|/g, '/')} | ${s.cta} |`);
   return [
-    `# Q4 content plan: ${plan.brand}`,
+    `# Content plan: ${plan.brand}`,
     '',
     `${plan.window.start} → ${plan.window.end} · ${plan.platforms.join(', ')} · ${plan.postsPerWeekPerPlatform} posts/week/platform`,
     '',

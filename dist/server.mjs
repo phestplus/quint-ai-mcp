@@ -39231,7 +39231,7 @@ var YEAR_GLOBAL_REACH = {
 
 // src/events.js
 var CATEGORIES = ["shopping", "cultural", "religious", "awareness", "seasonal", "civic"];
-var Q4_EVENTS = [
+var END_OF_YEAR_EVENTS = [
   // October
   {
     id: "ng-independence",
@@ -39609,7 +39609,7 @@ var Q4_EVENTS = [
     hashtags: ["#NewYear", "#HappyNewYear"]
   }
 ];
-var EVENTS = [...YEAR_EVENTS, ...Q4_EVENTS];
+var EVENTS = [...YEAR_EVENTS, ...END_OF_YEAR_EVENTS];
 
 // src/dates.js
 function ymd(date6) {
@@ -40922,7 +40922,7 @@ function pickFormat(p, assetType) {
 import { mkdirSync, readFileSync, writeFileSync, chmodSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-var base = () => (process.env.QUINT_AI_API_URL || "https://quint.erasstack.com").replace(/\/+$/, "");
+var base = () => (process.env.QUINT_AI_API_URL || "https://quintai.erasstack.com").replace(/\/+$/, "");
 var credFile = () => join(process.env.QUINT_AI_HOME || join(homedir(), ".quint-ai"), "credentials.json");
 var NO_KEY = 'Not connected to Quint AI Cloud yet. Call cloud_account with action "connect": it returns a link and a code for the user to approve in their browser (about 30 seconds, free). Then call the same tool again.';
 function readSaved() {
@@ -41589,7 +41589,7 @@ var endOf = (t) => {
   const e = Math.min(h * 60 + m + 30, 23 * 60 + 59);
   return `${String(Math.floor(e / 60)).padStart(2, "0")}${String(e % 60).padStart(2, "0")}`;
 };
-function toICS(slots, calName = "Q4 content plan") {
+function toICS(slots, calName = "Content plan") {
   const stamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//quint-ai//content plan//EN", "CALSCALE:GREGORIAN", `X-WR-CALNAME:${icsText(calName)}`];
   slots.forEach((s, i) => {
@@ -41605,7 +41605,7 @@ function toICS(slots, calName = "Q4 content plan") {
 function toMarkdown(plan) {
   const rows = plan.slots.map((s) => `| ${s.date} | ${s.time ?? "-"} | ${s.weekday.slice(0, 3)} | ${s.platform} | ${s.format} | ${s.event ?? "-"} | ${s.phase} | ${String(s.angle).replace(/\|/g, "/")} | ${s.cta} |`);
   return [
-    `# Q4 content plan: ${plan.brand}`,
+    `# Content plan: ${plan.brand}`,
     "",
     `${plan.window.start} \u2192 ${plan.window.end} \xB7 ${plan.platforms.join(", ")} \xB7 ${plan.postsPerWeekPerPlatform} posts/week/platform`,
     "",
@@ -44333,9 +44333,9 @@ ${html}` }] };
   }, wrap(async (a) => json3(await findImages(a.query, a))));
   server.registerTool("publish_page", {
     title: "Publish a page online",
-    description: `Put a sales page online and get a shareable link, e.g. https://quint-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user's own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).`,
+    description: `Put a sales page online and get a shareable link, e.g. https://quintai-korakicks.erasstack.com/black-friday. Pass the HTML from landing_page, a local file path (local mode), or "page" with landing_page arguments to build and publish in one step. Free plan: 1 site, 3 live pages, small badge. Pro adds the user's own domain and removes the badge. If not connected yet, call cloud_account with action "connect" first (free, one browser approval).`,
     inputSchema: {
-      brand: external_exports.string().min(1).describe("Brand name; becomes the address quint-<brand>.erasstack.com"),
+      brand: external_exports.string().min(1).describe("Brand name; becomes the address quintai-<brand>.erasstack.com"),
       path: external_exports.string().optional().describe('Page path, e.g. "black-friday"; empty for the home page'),
       role: external_exports.enum(["home", "campaign", "product", "legal", "review"]).optional().describe("home (site root, links live campaigns automatically), campaign (ends cleanly after endsAt), product, legal, or review (private, not indexed, does not use a page slot)"),
       endsAt: external_exports.string().optional().describe("For campaigns: when the offer ends (ISO with time zone). After it, the page says the offer has ended, then redirects home."),

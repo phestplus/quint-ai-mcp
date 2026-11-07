@@ -123,7 +123,7 @@ export function parseOffer(text) {
 
 const EVENT_NAMES = EVENTS.map((e) => ({ id: e.id, names: [e.id.replace(/-/g, ' '), clean(e.name).replace(/\(.*?\)/g, '').trim()] }));
 
-/** Find a Q4 event mentioned in text: "for bf", "black friday", "xmas", "11.11". */
+/** Find an event mentioned in text: "for bf", "black friday", "xmas", "11.11". */
 export function findEventsInText(text) {
   const t = ` ${clean(text).replace(/[^a-z0-9.'\s]/g, ' ')} `;
   const extra = { 'black-friday': [' bf ', 'black friday', 'blackfriday'], 'cyber-monday': [' cm ', 'cyber monday', 'cyber week'], christmas: ['xmas', 'christmas', 'x-mas', 'festive season', 'holidays', 'holiday season'], 'new-year': ['new year', 'newyear', ' ny '], 'singles-day': ['11.11', 'singles day', "singles' day", 'double eleven'], diwali: ['diwali', 'deepavali'], 'boxing-day': ['boxing day'], halloween: ['halloween'], hanukkah: ['hanukkah', 'chanukah'], 'us-thanksgiving': ['thanksgiving'], 'new-years-eve': ['nye', "new year's eve", 'new years eve'] };

@@ -1,4 +1,4 @@
-// Events from January to September. Same shape as the Q4 events in events.js.
+// Events from January to September. Same shape as the October to December events in events.js.
 // Moon-sighted dates (Ramadan, Eid) can shift by a day by country: they carry a note.
 // Sources: Hebcal (Jewish holidays), Umm al-Qura projections and UAE announcements (Ramadan, Eid),
 // public holiday listings (Lunar New Year, Holi). Unknown years are left out, never guessed.

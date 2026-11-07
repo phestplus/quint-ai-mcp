@@ -104,4 +104,4 @@ First version published to npm and GitHub Releases.
 
 ## 0.1.0 (internal, not published)
 
-- Q4 calendar, content plan, platform specs, asset briefs, holiday landing pages, CSV/ICS export.
+- Marketing calendar, content plan, platform specs, asset briefs, holiday landing pages, CSV/ICS export.
