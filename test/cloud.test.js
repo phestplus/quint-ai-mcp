@@ -8,12 +8,12 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { createServer } from '../src/server.js';
 
-const workerPath = new URL('../../quint-ai-cloud/src/worker.ts', import.meta.url);
+const workerPath = new URL('../../cloud/src/worker.ts', import.meta.url);
 const skip = !existsSync(workerPath) && 'quint-ai-cloud not present';
 
 test('publish, measure and upgrade through MCP tools', { skip, timeout: 30000 }, async () => {
   const { default: worker } = await import(workerPath.href);
-  const { MemoryStore, MemoryBucket } = await import(new URL('../../quint-ai-cloud/src/store.ts', import.meta.url).href);
+  const { MemoryStore, MemoryBucket } = await import(new URL('../../cloud/src/store.ts', import.meta.url).href);
   const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quint.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quint-', KEY_PEPPER: 'p', FLW_SECRET_KEY: 'k', FLW_PLAN_PRO_NGN: '1' };
 
   // Local HTTP server that routes by Host header, like Cloudflare would.
@@ -119,7 +119,7 @@ test('publish, measure and upgrade through MCP tools', { skip, timeout: 30000 },
 
 test('connect: browser approval saves the key locally, then publishing works', { skip, timeout: 30000 }, async () => {
   const { default: worker } = await import(workerPath.href);
-  const { MemoryStore, MemoryBucket } = await import(new URL('../../quint-ai-cloud/src/store.ts', import.meta.url).href);
+  const { MemoryStore, MemoryBucket } = await import(new URL('../../cloud/src/store.ts', import.meta.url).href);
   const { mkdtempSync, readFileSync } = await import('node:fs');
   const { tmpdir } = await import('node:os');
   const { join } = await import('node:path');
@@ -184,7 +184,7 @@ test('connect: browser approval saves the key locally, then publishing works', {
 
 test('AI generation through MCP: Free gets the free prompts, Pro generates and saves, video needs Studio', { skip, timeout: 30000 }, async () => {
   const { default: worker } = await import(workerPath.href);
-  const { MemoryStore, MemoryBucket } = await import(new URL('../../quint-ai-cloud/src/store.ts', import.meta.url).href);
+  const { MemoryStore, MemoryBucket } = await import(new URL('../../cloud/src/store.ts', import.meta.url).href);
   const env = { store: new MemoryStore(), PAGES: new MemoryBucket(), DEV: '1', APP_HOST: 'quint.erasstack.com', ROOT_DOMAIN: 'erasstack.com', PAGE_PREFIX: 'quint-', KEY_PEPPER: 'p', OPENROUTER_API_KEY: 'or-test' };
   const realFetch = globalThis.fetch;
   const http = createHttp(async (req, res) => {

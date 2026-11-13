@@ -5,8 +5,12 @@
 const UA = 'quint-ai-mcp brand reader (+https://github.com/phestplus/quint-ai-mcp)';
 const HEX6 = /#([0-9a-f]{6}|[0-9a-f]{3})\b/gi;
 
+// Many sites (behind bot protection, or on shop builders) refuse unknown readers. We ask honestly first, then once as an ordinary browser.
+const BROWSER_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 async function get(url, ms = 12000, max = 600_000) {
-  const r = await fetch(url, { headers: { 'user-agent': UA, accept: 'text/html,text/css,*/*' }, redirect: 'follow', signal: AbortSignal.timeout(ms) });
+  const ask = (ua) => fetch(url, { headers: { 'user-agent': ua, accept: 'text/html,application/xhtml+xml,text/css,*/*;q=0.8', 'accept-language': 'en' }, redirect: 'follow', signal: AbortSignal.timeout(ms) });
+  let r = await ask(UA);
+  if ([401, 403, 406, 429, 503].includes(r.status)) r = await ask(BROWSER_UA);
   if (!r.ok) throw new Error(`${new URL(url).host} returned ${r.status}`);
   const text = await r.text();
   return { text: text.slice(0, max), url: r.url };
